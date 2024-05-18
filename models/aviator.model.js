@@ -22,4 +22,4 @@ var taskSchema = mongoose.Schema({
       },
 });
 
-module.exports = mongoose.model('task', taskSchema);
+module.exports = mongoose.model('aviator', taskSchema);

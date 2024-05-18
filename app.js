@@ -3,31 +3,38 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
-var usersRouter = require('./routes/users');
-var taskRouter = require('./routes/tasks.route');
+var usersRouter = require('./routes/users.routes');
+var aviatorRouter = require('./routes/aviators.route');
 
 var mongoose = require('mongoose');
 
 var app = express();
 
 mongoose
-  .connect("mongodb://0.0.0.0:27017/fyp")
+  .connect("mongodb://0.0.0.0:27017/Skynova")
   .then(() => console.log("MongoDB connection established"))
   .catch((err) => console.log(err));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.set('port', 8080);
+app.set('port', 3000);
 app.listen(app.get('port'));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+
+
+app.all('/',(req,res)=>{
+  res.json({"hello":"world"})
+})
 
 app.use('/users', usersRouter);
-app.use('/tasks', taskRouter);
+app.use('/aviators', aviatorRouter);
 
 app.all('*',function(req, res, next) {
   next(createError(404));
