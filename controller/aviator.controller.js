@@ -12,8 +12,9 @@ const user = require('../models/user.model');
 
 exports.viewAviators = async (req, res, next) => {
     try {
-      const aviators = await user.find({ role: 'Aviator' });
-      res.json(aviators);
+      const aviator = await user.find({ role: 'Aviator' });
+      console.log(aviator);
+      res.json(aviator);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
@@ -59,7 +60,9 @@ exports.createAviator = async (req, res, next) => {
   exports.countAviators = async (req, res, next) => {
     try {
       const aviatorCount = await user.countDocuments({ role: 'Aviator' });
-      res.json({ count: aviatorCount });
+      
+      return res.json({ 'Aviators' :aviatorCount });
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
@@ -67,13 +70,22 @@ exports.createAviator = async (req, res, next) => {
   };
   
 
-exports.delete= function(req,res,next){
-    user.deleteOne({aviatorId:req.params.id}).then((result)=>{
-        res.json(result);
-    }).catch((err)=>{
-        res.json(err);
-    })
-};
+  exports.deleteAviator = async (req, res, next) => {
+    try {
+      const aviatorId = req.params.id;
+
+      const deletedAviator = await user.deleteOne({ _id: aviatorId, role: 'Aviator' });
+
+      if (deletedAviator.deletedCount === 0) {
+        return res.status(404).json({ message: 'Aviator not found' });
+      }
+  
+      res.json({ message: 'Aviator deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
 
 // exports.update= async function(req, res, next){
 //     try {

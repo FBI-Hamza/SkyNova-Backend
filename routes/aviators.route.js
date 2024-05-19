@@ -8,6 +8,6 @@ router.put('/updateAviator', aviator.update);
 router.get('/viewAviators', aviator.viewAviators);
 router.get('/viewAviator/:id', aviator.viewById);
 router.get('/countAviators', aviator.countAviators);
-router.delete('/deleteAviator/:id', aviator.delete);
+router.delete('/deleteAviator/:id', aviator.deleteAviator);
 router.patch('/updateAviator/:id', aviator.update);
 module.exports = router;

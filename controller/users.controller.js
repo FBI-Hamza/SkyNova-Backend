@@ -28,18 +28,19 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res,next) => {
     try {
-        const { username, password } = req.body;
-        const user = await User.findOne({ username });
-        if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
+        const { email, role, password } = req.body;
+        console.log(req.body);
+        const user = await User.findOne({ email });
+        
         const validPassword = await bcrypt.compare(password, user.password);
+        const validRole = await bcrypt.compare(role, user.role);
+
         if (!validPassword) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ userName: user.userName }, secret, {
-            expiresIn: '1h', 
+        const token = jwt.sign({ email: user.email }, secret, {
+            expiresIn: '30d', 
         });
         res.cookie('token', token, { httpOnly: true });
         
