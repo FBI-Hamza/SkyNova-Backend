@@ -2,19 +2,14 @@ const aviator = require('../models/aviator.model');
 const bcrypt = require('bcrypt');
 const user = require('../models/user.model');
 
-// exports.view= function(req,res,next){
-//     User.find().then((aviator)=>{
-//      res.json(aviator);   
-//     }).catch((error)=>{
-//         return err;
-//     })
-// };
-
 exports.viewAviators = async (req, res, next) => {
     try {
       const aviator = await user.find({ role: 'Aviator' });
-      console.log(aviator);
-      res.json(aviator);
+
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', 0);
+      return res.json(aviator);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
@@ -22,19 +17,17 @@ exports.viewAviators = async (req, res, next) => {
   };
 
 exports.viewById= async function(req,res,next){
-    user.find({aviatorId:req.params.id}).then((aviator)=>{
-       res.json(aviator);   
-       }).catch((error)=>{
-       return error;
-       })   
+    user.find({_id:req.params.id}).then((aviator)=>{
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', 0);
+      console.log();
+      res.json(aviator);   
+      }).catch((error)=>{
+      return error;
+      })   
 };
 
-// exports.create=function(req,res,next){
-//     aviator.create(req.body).then((result)=>{
-//         res.json(result);
-//     }).catch((err)=>{
-//         res.json(err);
-//     })};
 
 exports.createAviator = async (req, res, next) => {
     try {
@@ -60,8 +53,12 @@ exports.createAviator = async (req, res, next) => {
   exports.countAviators = async (req, res, next) => {
     try {
       const aviatorCount = await user.countDocuments({ role: 'Aviator' });
-      
-      return res.json({ 'Aviators' :aviatorCount });
+      const message = "Success";
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', 0);
+  
+      return res.json({"aviatorCount": aviatorCount, message});
 
     } catch (error) {
       console.error(error);
@@ -87,26 +84,6 @@ exports.createAviator = async (req, res, next) => {
     }
   };
 
-// exports.update= async function(req, res, next){
-//     try {
-//       const aviatorId = req.params.id;
-//       const updateData = req.body;
-//       const aviator = await aviator.findByIdAndUpdate({aviatorId:req.params.id}, updateData, { new: true });
-//       if (!aviator) {
-//         return res.status(404).json({ message: "aviator not found" });
-//       }
-//       res.json(aviator);
-//     } catch (err) {
-//       console.error(err);
-//       res.status(500).json({ message: "Error updating aviator" });
-//     }
-//   };
-
-// exports.update= async function(req, res, next){
-//     await aviator.findByIdAndUpdate({aviatorId:req.params.id}, req.body,{ completed: true });
-//     res.json({status:"success"})
-//       };
-
 exports.update= async(req, res) => {
     const _Id = req.params.id;
     const updated = req.body;
@@ -126,12 +103,4 @@ exports.update= async(req, res) => {
     }
   };
 
-// exports.update= async function(req, res, next){
-//       const aviatorId = req.params.id*1;
-//       const updateData = req.body;
-//       const parsedId =parseInt(aviatorId);
-//       if(isNaN(parsedId)) return res.status(400);
 
-//       aviator[parsedId] = {...aviator[parsedId],...updateData};
-//       return res.status(200);
-//   };

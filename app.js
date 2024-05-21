@@ -4,9 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+const helmet = require('helmet');
 
 var usersRouter = require('./routes/users.routes');
-var aviatorRouter = require('./routes/aviators.route');
+var aviatorRouter = require('./routes/aviators.routes');
+var jetRouter = require('./routes/jets.routes');
 
 var mongoose = require('mongoose');
 
@@ -27,6 +29,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
+app.use(express.urlencoded({extended: false}));
+app.use(helmet()); 
 
 
 app.all('/',(req,res)=>{
@@ -35,6 +39,8 @@ app.all('/',(req,res)=>{
 
 app.use('/users', usersRouter);
 app.use('/aviators', aviatorRouter);
+app.use('/jets', jetRouter);
+
 
 app.all('*',function(req, res, next) {
   next(createError(404));

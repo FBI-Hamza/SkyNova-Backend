@@ -22,16 +22,18 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    resetCode:{
+        type: String,
+        required: false
+    },
+    resetTokenExpiration:{
+        type: Date,
+        required: false
+    },
 
 });
 
-
-
-
 module.exports = mongoose.model('user', userSchema);
 
-// userSchema.methods.createResetPasswordToken = () =>{
-//     const  resetToken = crypto.randomBytes(32, this.toString('hex'));
 
-//     crypto.createHash()
-// }
+
