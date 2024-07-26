@@ -1,0 +1,12 @@
+const express = require('express');
+const router = express.Router();
+const terrains = require('../controller/terrain.controller');
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage()});
+
+router.post('/createTerrain',upload.single('jetImage'),terrains.createTerrain);
+router.get('/viewTerrain', terrains.viewTerrains);
+router.get('/viewTerrain/:id', terrains.TerrainViewById);
+router.delete('/deleteTerrain/:id', terrains.deleteTerrain);
+
+module.exports = router;

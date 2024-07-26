@@ -1,4 +1,4 @@
-const Jet = require('../models/jet.model'); 
+const Terrain = require('../models/terrain.model'); 
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
 const config = require('../firebase.config');
@@ -6,25 +6,25 @@ const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
 
 
-const createJet = async (req, res) => {
+const createTerrain = async (req, res) => {
   try {
     const dateTime = giveCurrentDateTime();
-    const storageRef = ref(storage, `JETS/${req.file.originalname} ${dateTime}`);
+    const storageRef = ref(storage, `Terrains/${req.file.originalname} ${dateTime}`);
     const metadata = {
       contentType: req.file.mimetype,
     };
 
     const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
-    const imageURL = await getDownloadURL(snapshot.ref);
+    const terrainURL = await getDownloadURL(snapshot.ref);
     
-    const { name, description} = req.body;
-    const newJet = new Jet({
-      name,
+    const { quantity, description} = req.body;
+    const newTerrain = new Terrain({
+      quantity,
       description,
-      imageURL,
+      terrainURL,
     });
 
-    await newJet.save();
+    await newTerrain.save();
     res.status(200);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -39,38 +39,38 @@ const giveCurrentDateTime = () => {
   return dateTime;
 };
 
-const viewJets = async (req, res, next) => {
+const viewTerrains = async (req, res, next) => {
   try {
-    const jets = await Jet.find({ });
+    const Terrains = await Terrain.find({ });
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', 0);
-    res.json(jets);
+    res.json(Terrains);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-const jetViewById= async (req,res,next)=>{
-  Jet.find({_id:req.params.id}).then((jet)=>{
-     return res.json(jet);   
+const TerrainViewById= async (req,res,next)=>{
+  Terrain.find({_id:req.params.id}).then((Terrain)=>{
+     return res.json(Terrain);   
      }).catch((error)=>{
      return error;
      })   
 };
 
-const deleteJet = async (req, res, next) => {
+const deleteTerrain = async (req, res, next) => {
   try {
-    const jetId = req.params.id;
+    const TerrainId = req.params.id;
 
-    const deletedJet = await Jet.deleteOne({_id: jetId});
+    const deletedTerrain = await Terrain.deleteOne({_id: TerrainId});
 
-    if (deletedJet.deletedCount === 0) {
-      return res.status(404).json({ message: 'jet not found' });
+    if (deletedTerrain.deletedCount === 0) {
+      return res.status(404).json({ message: 'Terrain not found' });
     }
 
-    res.json({ message: 'Jet deleted successfully' });
+    res.json({ message: 'Terrain deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -78,8 +78,8 @@ const deleteJet = async (req, res, next) => {
 };
 
 module.exports = {
-  createJet,
-  viewJets,
-  deleteJet,
-  jetViewById,
+  createTerrain,
+  viewTerrains,
+  deleteTerrain,
+  TerrainViewById,
 };

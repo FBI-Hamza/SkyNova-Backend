@@ -1,8 +1,6 @@
 var mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
-const { CommandFailedEvent } = require("mongodb");
 const crypto = require('crypto');
-const secret = "Hamza";
 
 var userSchema = mongoose.Schema({
     role:{
@@ -10,9 +8,17 @@ var userSchema = mongoose.Schema({
         enum:['Admin','Aviator'],
         required: true
     },
-    userName:{
+    firstName:{
         type: String,
         required: true
+    },
+    lastName:{
+        type: String,
+        required: true
+    },
+    profilePicture: {
+        type: String, 
+        required: false
     },
     email:{
         type: String,
@@ -30,7 +36,6 @@ var userSchema = mongoose.Schema({
         type: Date,
         required: false
     },
-
 });
 
 module.exports = mongoose.model('user', userSchema);

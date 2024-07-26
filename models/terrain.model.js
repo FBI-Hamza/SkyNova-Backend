@@ -1,11 +1,7 @@
 var mongoose = require("mongoose");
 
-const jetSchema = new mongoose.Schema({
-  // image: {  
-  //   data: Buffer,
-  //   contentType:String,
-  // },
-  name: {
+const terrainSchema = new mongoose.Schema({
+  quantity: {
     type: String,
     required: true,
   },
@@ -13,10 +9,10 @@ const jetSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  url: {
+  terrainURL: {
     type: String,
     required: true,
   },
 });
 
-module.exports = mongoose.model('jet', jetSchema);
+module.exports = mongoose.model('terrain', terrainSchema);

@@ -10,18 +10,21 @@ require('dotenv').config();
 
 exports.signup = async (req, res) => {
     try {
-        const { role,userName,email, password } = req.body;
-
+        const { role,firstName,lastName,email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-
+        console.log(req.body.role);
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
         const newUser = new User({
             role,
-            userName,
+            firstName,
+            lastName,
             email,
             password: hashedPassword,
         });
         await newUser.save();
-
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error(error);
@@ -33,7 +36,7 @@ exports.login = async (req, res,next) => {
     try {
         const { email, role, password } = req.body;
         const user = await User.findOne({ email });
-        
+        console.log(password);
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
@@ -50,12 +53,6 @@ exports.login = async (req, res,next) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
-
-
-
-
-
-
 
 exports.forgetPassword = async (req, res) => {
   try {
@@ -111,6 +108,7 @@ exports.forgetPassword = async (req, res) => {
 
 exports.verifyPassword = async (req, res) => {
   try {
+    console.log(req.body);
     const { email, resetCode } = req.body;
 
     const user = await User.findOne({ email, resetCode });
@@ -132,9 +130,9 @@ exports.verifyPassword = async (req, res) => {
  
   exports.resetPassword = async (req, res) => {
     try {
-      const { resetCode, email, password } = req.body;
+      console.log(req.body);
+      const { resetCode, email, resetPassword } = req.body;
   
-      console.log(resetCode);
   
       const user = await User.findOne({
         email,
@@ -148,7 +146,7 @@ exports.verifyPassword = async (req, res) => {
       // const salt = await bcrypt.genSalt(10); // Correct usage
       // const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(resetPassword, 10);
   
       user.password = hashedPassword;
       user.resetCode = undefined;
