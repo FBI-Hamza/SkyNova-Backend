@@ -45,7 +45,7 @@ var resultRouter = require('./routes/results.routes');
 var complaintRouter = require('./routes/complaints.routes');
 var suggestionRouter = require('./routes/suggestions.routes');
 var nonVerbalQuestionRouter = require('./routes/nonVerbalQuestion.routes');
-var nonVerbalQuizRouter = require('./routes/nonVerbalQuiz.Routes');
+var nonVerbalQuizRouter = require('./routes/nonverbalQuiz.routes');
 var communityQuestionRouter = require('./routes/communityQuestions.routes');
 var communityAnswerRouter = require('./routes/communityAnswers.routes');
 var messagesRouter = require('./routes/messages.routes');
@@ -76,9 +76,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(helmet()); 
 
-// app.all('/',(req,res)=>{
-//   res.json({"hello":"world"})
-// })
+app.all('/',(req,res)=>{
+  res.json({"hello":"world"})
+})
 
 app.use('/users', usersRouter);
 app.use('/aviators', aviatorRouter);
