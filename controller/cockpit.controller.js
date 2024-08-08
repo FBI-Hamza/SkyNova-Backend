@@ -1,4 +1,4 @@
-const jet = require('../models/jet.model'); 
+const cockpit = require('../models/cockpit.model'); 
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
 const config = require('../firebase.config');
@@ -6,10 +6,10 @@ const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
 
 
-const createJet = async (req, res) => {
+const createCockpit = async (req, res) => {
   try {
     const dateTime = giveCurrentDateTime();
-    const storageRef = ref(storage, `JETS/${req.file.originalname} ${dateTime}`);
+    const storageRef = ref(storage, `cockpits/${req.file.originalname} ${dateTime}`);
     const metadata = {
       contentType: req.file.mimetype,
     };
@@ -17,13 +17,13 @@ const createJet = async (req, res) => {
     const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
     const imageURL = await getDownloadURL(snapshot.ref);
     const { name, description} = req.body;
-    const newJet = new jet({
+    const newCockpit = new cockpit({
       name,
       description,
       imageURL,
     });
-    await newJet.save();
-    res.json({ message: 'Jet added successfully' }); 
+    await newCockpit.save();
+    res.json({ message: 'cockpit added successfully' }); 
     res.status(200);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -38,39 +38,39 @@ const giveCurrentDateTime = () => {
   return dateTime;
 };
 
-const viewJets = async (req, res, next) => {
+const viewCockpits = async (req, res, next) => {
   try {
-    const jets = await jet.find({ });
+    const cockpits = await cockpit.find({ });
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', 0);
-    res.json(jets);
+    res.json(cockpits);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-const jetViewById= async (req,res,next)=>{
-  jet.findOne({_id:req.params.id}).then((jet)=>{
+const cockpitViewById= async (req,res,next)=>{
+    cockpit.findOne({_id:req.params.id}).then((cockpits)=>{
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', 0); 
-    return res.json(jet);   
+    return res.json(cockpits);   
      }).catch((error)=>{
      return error;
      })   
 };
 
-const countJets = async (req, res, next) => {
+const countCockpits = async (req, res, next) => {
   try {
-    const jetCount = await jet.countDocuments({});
+    const cockpitCount = await cockpit.countDocuments({});
     const message = "Success";
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', 0);
 
-    return res.json({"Jet Count": jetCount, message});
+    return res.json({"Cockpit Count": cockpitCount, message});
 
   } catch (error) {
     console.error(error);
@@ -78,43 +78,42 @@ const countJets = async (req, res, next) => {
   }
 };
 
-const deleteJet = async (req, res, next) => {
+const deleteCockpit = async (req, res, next) => {
   try {
-    const jetId = req.params.id;
+    const cockpitId = req.params.id;
 
-    const deletedJet = await jet.deleteOne({_id: jetId});
+    const deletedCockpit = await cockpit.deleteOne({_id: cockpitId});
 
-    if (deletedJet.deletedCount === 0) {
-      return res.status(404).json({ message: 'jet not found' });
+    if (deletedCockpit.deletedCount === 0) {
+      return res.status(404).json({ message: 'Cockpit not found' });
     }
-
-    res.json({ message: 'Jet deleted successfully' });
+    res.json({ message: 'Cockpit deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-const updateJet = async (req, res) => {
+const updateCockpit = async (req, res) => {
 const _Id = req.params.id;
 const updated = req.body;
   try {
-      const jets = await jet.findByIdAndUpdate(_Id, updated, { new: true });
-      if (!jets) {
-          return res.status(404).send('Jet not found');
+      const cockpits = await cockpit.findByIdAndUpdate(_Id, updated, { new: true });
+      if (!cockpits) {
+          return res.status(404).send('Cockpit not found');
       }
-      res.json(jets);
+      res.json(cockpits);
   } catch (err) {
-      console.error('Error patching jet:', err);
+      console.error('Error patching cockpit:', err);
       res.status(500).send('Internal server error');
   }
 };
 
 module.exports = {
-  createJet,
-  viewJets,
-  deleteJet,
-  jetViewById,
-  countJets,
-  updateJet,
+  createCockpit,
+  viewCockpits,
+  deleteCockpit,
+  cockpitViewById,
+  countCockpits,
+  updateCockpit,
 };

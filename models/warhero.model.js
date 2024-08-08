@@ -10,11 +10,13 @@ var warheroSchema = mongoose.Schema({
         required: true
     },
     documentary:{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'Documentary',
         required: false
     },
     famousQuote:{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'Quote',
         required: true
     }
 

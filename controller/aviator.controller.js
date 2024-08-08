@@ -7,28 +7,54 @@ const config = require('../firebase.config');
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
 
-
-
 exports.viewAviators = async (req, res, next) => {
-    try {
-      const aviator = await user.find({ role: 'Aviator' });
+  try {
+    const aviator = await user.find({ role: 'Aviator' });
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', 0);
+    return res.json(aviator);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', 0);
-      return res.json(aviator);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-    }
-  };
+// exports.viewAviators = async (req, res, next) => {
+//   try {
+//     const page = parseInt(req.body.page) || 1;
+//     const limit = parseInt(req.body.limit) || 10;
+
+//     const skip = (page - 1) * limit;
+
+//     const aviators = await user.find({ role: 'Aviator' }).skip(skip).limit(limit);
+
+//     const total = await user.countDocuments({ role: 'Aviator' });
+
+//     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+//     res.setHeader('Pragma', 'no-cache');
+//     res.setHeader('Expires', 0);
+
+//     res.json({
+//       data: aviators,
+//       meta: {
+//         total,
+//         page,
+//         limit,
+//         totalPages: Math.ceil(total / limit),
+//       },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
 
 exports.viewById= async function(req,res,next){
     user.findOne({_id:req.params.id}).then((aviator)=>{
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
-      console.log();
       res.json(aviator);   
       }).catch((error)=>{
       return error;
@@ -67,7 +93,7 @@ exports.uploadDP = async (req, res, next) => {
   try {
     const id  = req.body.id; 
     const dateTime = giveCurrentDateTime();
-    const storageRef = ref(storage, `files/${req.file.originalname} ${dateTime}`);
+    const storageRef = ref(storage, `Profile Picture/${req.file.originalname} ${dateTime}`);
 
     const metadata = {
       contentType: req.file.mimetype,
@@ -97,9 +123,7 @@ const giveCurrentDateTime = () => {
   return dateTime;
 };
 
-
-
-  exports.countAviators = async (req, res, next) => {
+exports.countAviators = async (req, res, next) => {
     try {
       const aviatorCount = await user.countDocuments({ role: 'Aviator' });
       const message = "Success";
@@ -115,7 +139,6 @@ const giveCurrentDateTime = () => {
     }
   };
   
-
   exports.deleteAviator = async (req, res, next) => {
     try {
       const aviatorId = req.params.id;

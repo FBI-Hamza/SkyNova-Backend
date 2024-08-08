@@ -1,4 +1,4 @@
-const jet = require('../models/jet.model'); 
+const mission = require('../models/mission.model'); 
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
 const config = require('../firebase.config');
@@ -6,10 +6,10 @@ const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
 
 
-const createJet = async (req, res) => {
+const createMission = async (req, res) => {
   try {
     const dateTime = giveCurrentDateTime();
-    const storageRef = ref(storage, `JETS/${req.file.originalname} ${dateTime}`);
+    const storageRef = ref(storage, `Missions/${req.file.originalname} ${dateTime}`);
     const metadata = {
       contentType: req.file.mimetype,
     };
@@ -17,13 +17,13 @@ const createJet = async (req, res) => {
     const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
     const imageURL = await getDownloadURL(snapshot.ref);
     const { name, description} = req.body;
-    const newJet = new jet({
+    const newmission = new mission({
       name,
       description,
       imageURL,
     });
-    await newJet.save();
-    res.json({ message: 'Jet added successfully' }); 
+    await newmission.save();
+    res.json({ message: 'Mission added successfully' }); 
     res.status(200);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -38,39 +38,39 @@ const giveCurrentDateTime = () => {
   return dateTime;
 };
 
-const viewJets = async (req, res, next) => {
+const viewMissions = async (req, res, next) => {
   try {
-    const jets = await jet.find({ });
+    const missions = await mission.find({ });
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', 0);
-    res.json(jets);
+    res.json(missions);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-const jetViewById= async (req,res,next)=>{
-  jet.findOne({_id:req.params.id}).then((jet)=>{
+const missionViewById= async (req,res,next)=>{
+    mission.findOne({_id:req.params.id}).then((missions)=>{
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', 0); 
-    return res.json(jet);   
+    return res.json(missions);   
      }).catch((error)=>{
      return error;
      })   
 };
 
-const countJets = async (req, res, next) => {
+const countMissions = async (req, res, next) => {
   try {
-    const jetCount = await jet.countDocuments({});
+    const missionCount = await mission.countDocuments({});
     const message = "Success";
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', 0);
 
-    return res.json({"Jet Count": jetCount, message});
+    return res.json({"mission Count": missionCount, message});
 
   } catch (error) {
     console.error(error);
@@ -78,43 +78,43 @@ const countJets = async (req, res, next) => {
   }
 };
 
-const deleteJet = async (req, res, next) => {
+const deleteMission = async (req, res, next) => {
   try {
-    const jetId = req.params.id;
+    const missionId = req.params.id;
 
-    const deletedJet = await jet.deleteOne({_id: jetId});
+    const deletedmission = await mission.deleteOne({_id: missionId});
 
-    if (deletedJet.deletedCount === 0) {
-      return res.status(404).json({ message: 'jet not found' });
+    if (deletedmission.deletedCount === 0) {
+      return res.status(404).json({ message: 'mission not found' });
     }
 
-    res.json({ message: 'Jet deleted successfully' });
+    res.json({ message: 'mission deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-const updateJet = async (req, res) => {
+const updateMission = async (req, res) => {
 const _Id = req.params.id;
 const updated = req.body;
   try {
-      const jets = await jet.findByIdAndUpdate(_Id, updated, { new: true });
-      if (!jets) {
-          return res.status(404).send('Jet not found');
+      const missions = await mission.findByIdAndUpdate(_Id, updated, { new: true });
+      if (!missions) {
+          return res.status(404).send('mission not found');
       }
-      res.json(jets);
+      res.json(missions);
   } catch (err) {
-      console.error('Error patching jet:', err);
+      console.error('Error patching mission:', err);
       res.status(500).send('Internal server error');
   }
 };
 
 module.exports = {
-  createJet,
-  viewJets,
-  deleteJet,
-  jetViewById,
-  countJets,
-  updateJet,
+  createMission,
+  viewMissions,
+  deleteMission,
+  missionViewById,
+  countMissions,
+  updateMission,
 };

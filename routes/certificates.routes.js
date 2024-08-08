@@ -4,7 +4,7 @@ const Certificates = require('../controller/certificates.controller')
 
 router.post('/createCertificates', Certificates.createCertificate);
 router.get('/viewCertificates', Certificates.viewCertificates);
-router.get('/viewCerrtificate/:id', Certificates.viewById);
+router.get('/viewCertificate/:id', Certificates.viewById);
 router.get('/countCertificates', Certificates.countCertificates);
 router.delete('/deleteCertificate/:id', Certificates.deleteCertificate);
 router.patch('/updateCertificate/:id', Certificates.updateCertificate);

@@ -1,13 +1,17 @@
 var mongoose = require("mongoose");
 
 var nonVerbalQuestionSchema = mongoose.Schema({
-    question:{
+    questionText:{
         type: String,
         required: true
     },
+    questionImg:{
+        type: String,
+        required: false
+    },
     options:{
         type: [String],
-        required: false
+        required: true
     },
     answer: {
         type: String,
@@ -16,4 +20,4 @@ var nonVerbalQuestionSchema = mongoose.Schema({
     
 });
 
-module.exports = mongoose.model('NonVerbalQuestion', nonVerbalQuestionSchema);
+module.exports = mongoose.model('nonVerbalQuestion', nonVerbalQuestionSchema);

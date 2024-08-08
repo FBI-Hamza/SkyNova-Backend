@@ -7,6 +7,7 @@ const config = require('../firebase.config');
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
 
+
 exports.viewNonVerbalQuestion = async (req, res, next) => {
     try {
       const nonVerbalQuestions  = await nonVerbalQuestion.find({});
@@ -31,56 +32,51 @@ exports.viewById= async function(req,res,next){
       })   
 };
 
-exports.createNonVerbalQuestion = async (req, res, next) => {
+
+exports.createNonVerbalQuestion = async (req, res) => {
   try {
-      const { question, options, answer, quizId } = req.body;
+    console.log(req.body);
+    console.log(req.files);
+    const { quizId, questionText, answerText } = req.body;
+    const { optionsImgs } = req.files;
 
-      const questionRef = ref(storage, `nonVerbalQuestions/${question.originalname}`);
-      await uploadBytesResumable(questionRef, question.buffer);
-      const questionURL = await getDownloadURL(questionRef);
+    let questionImgValue;
+    if(req.files.questionImg){
+    const questionRef = ref(storage, `nonVerbalQuestions/${req.files.questionImg[0].originalname}`);
+    await uploadBytesResumable(questionRef, req.files.questionImg[0].buffer);
+    questionImgValue = await getDownloadURL(questionRef);
+    }
 
-      const optionsImageURLs = [];
-      if (options && options.length > 0) {
-          for (const optionImage of options) {
-              const optionImageRef = ref(storage, `nonVerbalQuestions/${optionImage.originalname}`);
-              await uploadBytesResumable(optionImageRef, optionImage.buffer);
-              const optionImageURL = await getDownloadURL(optionImageRef);
-              optionsImageURLs.push(optionImageURL);
-          }
+    const optionsImageURLs = [];
+    if (optionsImgs && optionsImgs.length > 0) {
+      for (const optionImage of optionsImgs) {
+        const optionImageRef = ref(storage, `nonVerbalQuestions/${optionImage.originalname}`);
+        await uploadBytesResumable(optionImageRef, optionImage.buffer);
+        const optionImageURL = await getDownloadURL(optionImageRef);
+        optionsImageURLs.push(optionImageURL);
       }
+    }
+    const newQuestion = new nonVerbalQuestion({
+      questionText:questionText,
+      questionImg: questionImgValue,
+      options: optionsImageURLs,
+      answer: answerText,
+    });
 
-      const answerRef = ref(storage, `nonVerbalQuestions/${answer.originalname}`);
-      await uploadBytesResumable(answerRef, answer.buffer);
-      const answerURL = await getDownloadURL(answerRef);
+    await newQuestion.save();
 
-      const newQuestion = new nonVerbalQuestion({
-          questionURL,
-          optionsImageURLs,
-          answerURL,
-      });
+    const quiz = await nonVerbalQuiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+    quiz.questions.push(newQuestion._id);
+    await quiz.save();
 
-      await newQuestion.save();
-
-      const quiz = await quizzes.findById(quizId);
-      if (!quiz) {
-          return res.status(404).json({ message: 'Quiz not found' });
-      }
-      quiz.nonVerbalQuestions.push(newQuestion._id);
-      await quiz.save();
-
-      res.status(200).json({ message: 'Question created and added to the quiz successfully', question: newQuestion });
+    return res.status(200).json({ message: 'Question created and added to the quiz successfully', question: newQuestion });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
-};
-
-const giveCurrentDateTime = () => {
-  const today = new Date();
-  const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-  const dateTime = date + ' ' + time;
-  return dateTime;
 };
 
   exports.countNonVerbalQuestions = async (req, res, next) => {

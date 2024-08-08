@@ -1,11 +1,11 @@
-const quiz = require('../models/verbalQuiz.model');
+const quiz = require('../models/quiz.model');
 
 
-exports.viewVerbalQuizzes = async (req, res, next) => {
+exports.viewQuizzes = async (req, res, next) => {
     try {
       const quizzes = await quiz.find({}).populate('questions');
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Pragma', 'no-cache'); 
       res.setHeader('Expires', 0);
       return res.json(quizzes);
     } catch (error) {
@@ -14,14 +14,16 @@ exports.viewVerbalQuizzes = async (req, res, next) => {
     }
   };
 
-  exports.viewById = async function(req, res, next) {
+  exports.viewByTitle = async function(req, res, next) {
     try {
-        const quizWithQuestions = await quiz.findOne({ _id: req.params.id }).populate('questions');
+        console.log(req.params);
+        const quizWithQuestions = await quiz.findOne({ _id: req.params.title }).populate('questions');
+        console.log(quizWithQuestions);
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
         res.setHeader('Expires', 0);
         if (!quizWithQuestions) {
-            return res.status(404).json({ message: "Verbal Quiz not found" });
+            return res.status(404).json({ message: "Quiz not found" });
         }
         res.json(quizWithQuestions);
     } catch (error) {
@@ -29,20 +31,21 @@ exports.viewVerbalQuizzes = async (req, res, next) => {
       }
 };
 
-exports.createVerbalQuiz = async (req, res, next) => {
+
+exports.createQuiz = async (req, res, next) => {
     try {
       console.log(req.body);
       const {title,description,questions } = req.body;
 
-        const newQuiz = new quiz({
+        const newquiz = new quiz({
         title,
         description,
         questions,
       });
   
-      await newQuiz.save();
+      await newquiz.save();
   
-      res.status(200).json({ message: 'Verbal Quiz created successfully' });
+      res.status(200).json({ message: 'Quiz created successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
@@ -50,16 +53,14 @@ exports.createVerbalQuiz = async (req, res, next) => {
   };
 
 
-  exports.countVerbalQuizzes = async (req, res, next) => {
+  exports.countQuizzes = async (req, res, next) => {
     try {
       const quizCount = await quiz.countDocuments({});
       const message = "Success";
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
-  
       return res.json({"Quiz Count": quizCount, message});
-
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
@@ -67,38 +68,38 @@ exports.createVerbalQuiz = async (req, res, next) => {
   };
   
 
-  exports.deleteVerbalQuiz = async (req, res, next) => {
+  exports.deleteQuiz = async (req, res, next) => {
     try {
 
-      const Quiz = req.params.id;
+      const quiz = req.params.id;
 
-      const deletedQuiz = await quiz.deleteOne({ _id: Quiz });
+      const deletedquiz = await quiz.deleteOne({ _id: quiz });
 
-      if (deletedQuiz.deletedCount === 0) {
+      if (deletedquiz.deletedCount === 0) {
         return res.status(404).json({ message: 'Quiz not found' });
       }
   
-      res.json({ message: 'Verbal Quiz deleted successfully' });
+      res.json({ message: 'Quiz deleted successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
     }
   };
 
-exports.updateVerbalQuiz= async(req, res) => {
-    console.log(req.params);
-    const title = req.params.title;
+exports.updateQuiz= async(req, res) => {
+    const _Id = req.params.id;
     const updated = req.body;
     try {
-      const quizzes = await quiz.findByIdAndUpdate({ _id : title }, updated, { new: true });
-      console.log(quizzes);
+      const quizzes = await quiz.findByIdAndUpdate(_Id, {$set:updated},{new:true});
+
       if (!quizzes) {
-        return res.status(404).send('Verbal Quiz not found');
+        return res.status(404).send('Quiz not found');
       }
-        res.json(quizzes);
-      } catch (err) {
-        console.error('Error patching verbal quiz:', err);
-        res.status(500).send('Internal server error');
-      }
+  
+      res.json(quizzes);
+    } catch (err) {
+      console.error('Error patching quiz:', err);
+      res.status(500).send('Internal server error');
+    }
   };
 

@@ -45,21 +45,21 @@ exports.createReport = async (req, res, next) => {
   };
 
 
-  // exports.countreports = async (req, res, next) => {
-  //   try {
-  //     const reportCount = await report.countDocuments({});
-  //     const message = "Success";
-  //     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  //     res.setHeader('Pragma', 'no-cache');
-  //     res.setHeader('Expires', 0);
+  exports.countReports = async (req, res, next) => {
+    try {
+      const reportCount = await report.countDocuments({});
+      const message = "Success";
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', 0);
   
-  //     return res.json({"reportCount": reportCount, message});
+      return res.json({"reportCount": reportCount, message});
 
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ message: 'Server error' });
-  //   }
-  // };
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
   
 
   exports.deleteReport = async (req, res, next) => {

@@ -1,4 +1,6 @@
 var mongoose = require("mongoose");
+const nonVerbalQuestion  = require('../models/nonVerbalQuestion.model');
+
 var nonVerbalQuizSchema = mongoose.Schema({
     title:{
         type: String,

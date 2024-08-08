@@ -10,31 +10,57 @@ var logger = require('morgan');
 var cors = require('cors');
 //Helmet middleware to enhance security by providing various http headers.
 const helmet = require('helmet');
+const bodyParser = require('body-parser');
+const http = require('http');
+const socketio = require('socket.io');
+const server = http.createServer(express);
+const io = socketio(server);
+
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // Listen for chat messages
+  socket.on('chat message', (msg) => {
+    // Broadcast the message to all connected users
+    io.emit('chat message', msg);
+  });
+
+  // Handle disconnection
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
 var usersRouter = require('./routes/users.routes');
 var aviatorRouter = require('./routes/aviators.routes');
 var jetRouter = require('./routes/jets.routes');
 var verbalQuestionRouter = require('./routes/verbalQuestions.routes');
-var verbalQuizRouter = require('./routes/nonverbalQuiz.Routes');
+var verbalQuizRouter = require('./routes/verbalQuizzes.routes');
 var notificationRouter = require('./routes/notifications.routes');
 var certificateRouter = require('./routes/certificates.routes');
 var reportRouter = require('./routes/reports.routes');
 var resourceRouter = require('./routes/resources.routes');
 var warHeroRouter = require('./routes/warhero.routes');
-var resultRouter =require('./routes/results.routes');
+var resultRouter = require('./routes/results.routes');
 var complaintRouter = require('./routes/complaints.routes');
 var suggestionRouter = require('./routes/suggestions.routes');
 var nonVerbalQuestionRouter = require('./routes/nonVerbalQuestion.routes');
-var nonVerbalQuizRouter = require('./routes/nonverbalQuiz.Routes');
-  
-var mongoose = require('mongoose');
-const nonVerbalQuestionModel = require('./models/nonVerbalQuestion.model');
+var nonVerbalQuizRouter = require('./routes/nonVerbalQuiz.Routes');
+var communityQuestionRouter = require('./routes/communityQuestions.routes');
+var communityAnswerRouter = require('./routes/communityAnswers.routes');
+var messagesRouter = require('./routes/messages.routes');
+var documentaryRouter = require('./routes/documentaries.routes');
+var quoteRouter = require('./routes/quotes.routes');
+var cockpitRouter = require('./routes/cockpit.routes');
+var quizRouter = require('./routes/quiz.routes');
+var missionRouter = require('./routes/missions.routes');
 
+var mongoose = require('mongoose');
 var app = express();
 
 mongoose
   .connect("mongodb://0.0.0.0:27017/Skynova")
-  .then(() => console.log("MongoDB connection established"))
+  .then(() => console.log("Server Started..."))
   .catch((err) => console.log(err));
 
 app.set('views', path.join(__dirname, 'views'));
@@ -42,17 +68,17 @@ app.set('view engine', 'jade');
 app.set('port', 3000);
 app.listen(app.get('port'));
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({limit:"100mb"}));
+app.use(bodyParser.json({limit:"100mb"}));
+app.use(express.urlencoded({ extended: true,parameterLimit:100000,limit:"100mb" }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(helmet()); 
 
-
 // app.all('/',(req,res)=>{
 //   res.json({"hello":"world"})
-// })7
+// })
 
 app.use('/users', usersRouter);
 app.use('/aviators', aviatorRouter);
@@ -65,15 +91,22 @@ app.use('/certificates', certificateRouter);
 app.use('/resources', resourceRouter);
 app.use('/warHeroes', warHeroRouter);
 app.use('/results', resultRouter);
-app.use('/complaints',complaintRouter)
-app.use('/suggestions',suggestionRouter)
-app.use('/nonVerbalQuestion',nonVerbalQuestionRouter)
-app.use('/nonVerbalQuiz',nonVerbalQuizRouter)
+app.use('/complaints',complaintRouter);
+app.use('/suggestions',suggestionRouter);
+app.use('/nonVerbalQuestions',nonVerbalQuestionRouter);
+app.use('/nonVerbalQuizzes',nonVerbalQuizRouter);
+app.use('/communityQuestions',communityQuestionRouter);
+app.use('/communityAnswers',communityAnswerRouter);
+app.use('/messages',messagesRouter);
+app.use('/documentaries',documentaryRouter);
+app.use('/quotes',quoteRouter);
+app.use('/cockpits',cockpitRouter);
+app.use('/quizzes',quizRouter);
+app.use('/missions',missionRouter);
 
 app.all('*',function(req, res, next) {
   next(createError(404));
 });
-
 
 //This middleware captures errors, sets local variables for error handling, specifies an appropriate HTTP status code, and renders an error view. 
 app.use(function(err, req, res, next) {

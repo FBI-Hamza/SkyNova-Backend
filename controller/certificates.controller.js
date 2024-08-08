@@ -14,7 +14,7 @@ exports.viewCertificates = async (req, res, next) => {
   };
 
 exports.viewById= async function(req,res,next){
-    result.find({_id:req.params.id}).then((Certificates)=>{
+      certificate.findOne({_id:req.params.id}).then((Certificates)=>{
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -36,7 +36,7 @@ exports.createCertificate = async (req, res, next) => {
   
       await newCertificate.save();
   
-      res.status(200).json({ message: 'certificate created successfully' });
+      res.status(200).json({ message: 'Certificate created successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
@@ -46,7 +46,7 @@ exports.createCertificate = async (req, res, next) => {
 
   exports.countCertificates = async (req, res, next) => {
     try {
-      const certificateCount = await result.countDocuments({});
+      const certificateCount = await certificate.countDocuments({});
       const message = "Success";
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');

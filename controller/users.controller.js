@@ -67,7 +67,7 @@ exports.forgetPassword = async (req, res) => {
     const resetCode = crypto.randomBytes(3).toString('hex').toUpperCase();
 
     user.resetCode = resetCode;
-    user.resetTokenExpiration = Date.now() + 10 * 60 * 1000; // 10 minutes
+    user.resetTokenExpiration = Date.now() + 10 * 60 * 1000; 
     await user.save({ validateBeforeSave: false });
 
     // Securely store your SendGrid API key using environment variables

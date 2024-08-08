@@ -3,9 +3,9 @@ const nonVerbalQuiz = require('../models/nonVerbalQuiz.model');
 
 exports.viewNonVerbalQuizzes = async (req, res, next) => {
     try {
-      const nonVerbalQuizzes = await nonVerbalQuiz.find({}).populate('nonVerbalQuestion');
+      const nonVerbalQuizzes = await nonVerbalQuiz.find({}).populate('questions');
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Pragma', 'no-cache'); 
       res.setHeader('Expires', 0);
       return res.json(nonVerbalQuizzes);
     } catch (error) {
@@ -17,13 +17,13 @@ exports.viewNonVerbalQuizzes = async (req, res, next) => {
   exports.viewByTitle = async function(req, res, next) {
     try {
         console.log(req.params);
-        const nonVerbalQuizWithQuestions = await nonVerbalQuiz.findOne({ title: req.params.title }).populate('nonVerbalQuestion');
+        const nonVerbalQuizWithQuestions = await nonVerbalQuiz.findOne({ _id: req.params.title }).populate('questions');
         console.log(nonVerbalQuizWithQuestions);
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
         res.setHeader('Expires', 0);
         if (!nonVerbalQuizWithQuestions) {
-            return res.status(404).json({ message: "nonVerbalQuiz not found" });
+            return res.status(404).json({ message: "Non Verbal Quiz not found" });
         }
         res.json(nonVerbalQuizWithQuestions);
     } catch (error) {
@@ -37,7 +37,7 @@ exports.createNonVerbalQuiz = async (req, res, next) => {
       console.log(req.body);
       const {title,description,questions } = req.body;
 
-        const newnonVerbalQuiz = new nonVerbalQuiz({
+        const newNonVerbalQuiz = new nonVerbalQuiz({
         title,
         description,
         questions,
@@ -45,7 +45,7 @@ exports.createNonVerbalQuiz = async (req, res, next) => {
   
       await newNonVerbalQuiz.save();
   
-      res.status(200).json({ message: 'nonVerbalQuiz created successfully' });
+      res.status(200).json({ message: 'Non Verbal Quiz created successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
@@ -61,7 +61,7 @@ exports.createNonVerbalQuiz = async (req, res, next) => {
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
   
-      return res.json({"nonVerbalQuizCount": nonVerbalQuizCount, message});
+      return res.json({"NonVerbalQuizCount": nonVerbalQuizCount, message});
 
     } catch (error) {
       console.error(error);
@@ -73,9 +73,9 @@ exports.createNonVerbalQuiz = async (req, res, next) => {
   exports.deleteNonVerbalQuiz = async (req, res, next) => {
     try {
 
-      const nonVerbalQuiz = req.params.id;
+      const nonVerbalQuizId = req.params.id;
 
-      const deletedNonVerbalQuiz = await nonVerbalQuiz.deleteOne({ _id: nonVerbalQuiz });
+      const deletedNonVerbalQuiz = await nonVerbalQuiz.deleteOne({ _id: nonVerbalQuizId });
 
       if (deletedNonVerbalQuiz.deletedCount === 0) {
         return res.status(404).json({ message: 'Non Verbal Quiz not found' });
@@ -97,7 +97,6 @@ exports.updateNonVerbalQuiz= async(req, res) => {
       if (!nonVerbalQuizzes) {
         return res.status(404).send('Non Verbal Quiz not found');
       }
-  
       res.json(nonVerbalQuizzes);
     } catch (err) {
       console.error('Error patching nonVerbalQuiz:', err);

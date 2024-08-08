@@ -9,9 +9,13 @@ var resourcesSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    description:{
+        type: String,
+        required: false
+    },
     contentURL: {
         type: String,
-        required: true
+        required: false
     },
     scenario: {
         type: Date,

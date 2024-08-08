@@ -8,21 +8,11 @@ const storage = getStorage(app);
 
 const createWarHero = async (req, res) => {
   try {
-    const dateTime = giveCurrentDateTime();
-    const storageRef = ref(storage, `War Heroes/${req.file.originalname} ${dateTime}`);
-    const metadata = {
-      contentType: req.file.mimetype,
-    };
-
-    const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
-    const documentary = await getDownloadURL(snapshot.ref);
-    
-    const { name,description,famousQuote} = req.body;
+   
+    const { name,description} = req.body;
     const newWarHero = new warHero({
       name,
       description,
-      documentary,
-      famousQuote
     });
 
     await newWarHero.save();
@@ -32,17 +22,10 @@ const createWarHero = async (req, res) => {
   }
 };
 
-const giveCurrentDateTime = () => {
-  const today = new Date();
-  const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-  const dateTime = date + ' ' + time;
-  return dateTime;
-};
 
 const viewWarHeroes = async (req, res, next) => {
   try {
-    const warHeroes = await warHero.find({ });
+    const warHeroes = await warHero.find({ }).populate('Documentary','FamousQuote');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', 0);
@@ -54,7 +37,7 @@ const viewWarHeroes = async (req, res, next) => {
 };
 
 const warHeroViewById= async (req,res,next)=>{
-  warHero.find({_id:req.params.id}).then((warHero)=>{
+  warHero.find({_id:req.params.id}).populate('Documentary','FamousQuote').then((warHero)=>{
      return res.json(warHero);   
      }).catch((error)=>{
      return error;

@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
-const verbalQuestionModel = require("./verbalQuestion.model");
-var verbalQuizSchema = mongoose.Schema({
+const Question  = require('../models/question.model');
+
+var quizSchema = mongoose.Schema({
     title:{
         type: String,
         required: true
@@ -11,11 +12,10 @@ var verbalQuizSchema = mongoose.Schema({
     },
     questions: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'verbalQuestion',
-        required: true
+        ref: 'Question',
+        required: false
     }]
     }
 );
 
-module.exports = mongoose.model('verbalQuiz', verbalQuizSchema);
-
+module.exports = mongoose.model('Quiz', quizSchema);
