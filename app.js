@@ -49,9 +49,9 @@ app.use(cors());
 app.use(helmet()); 
 
 
-// app.all('/',(req,res)=>{
-//   res.json({"hello":"world"})
-// })7
+app.all('/',(req,res)=>{
+  res.json({"hello":"world"})
+});
 
 app.use('/users', usersRouter);
 app.use('/aviators', aviatorRouter);
