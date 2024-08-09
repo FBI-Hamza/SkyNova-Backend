@@ -58,7 +58,7 @@ var missionRouter = require('./routes/missions.routes');
 
 var mongoose = require('mongoose');
 var app = express();
-var dbURI = process.env.MONGODB_URI || 'mongodb://0.0.0.0:27017/Skynova';
+var dbURI = "mongodb+srv://Developer:developer25@sky-nova.w6bvo.mongodb.net/?retryWrites=true&w=majority&appName=Sky-nova";
 mongoose
   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Server Started..."))
