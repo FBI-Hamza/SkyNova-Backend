@@ -31,16 +31,11 @@ io.on('connection', (socket) => {
   });
 });
 
-//Routers
 var usersRouter = require('./routes/users.routes');
 var aviatorRouter = require('./routes/aviators.routes');
 var jetRouter = require('./routes/jets.routes');
 var verbalQuestionRouter = require('./routes/verbalQuestions.routes');
-<<<<<<< HEAD
 var verbalQuizRouter = require('./routes/verbalQuizzes.routes');
-=======
-var verbalQuizRouter = require('./routes/verbalQuiz.Routes');
->>>>>>> c2997afbe6b936861910b412ff018f31275eb533
 var notificationRouter = require('./routes/notifications.routes');
 var certificateRouter = require('./routes/certificates.routes');
 var reportRouter = require('./routes/reports.routes');
@@ -50,7 +45,6 @@ var resultRouter = require('./routes/results.routes');
 var complaintRouter = require('./routes/complaints.routes');
 var suggestionRouter = require('./routes/suggestions.routes');
 var nonVerbalQuestionRouter = require('./routes/nonVerbalQuestion.routes');
-<<<<<<< HEAD
 var nonVerbalQuizRouter = require('./routes/nonVerbalQuizzes.routes');
 var communityQuestionRouter = require('./routes/communityQuestions.routes');
 var communityAnswerRouter = require('./routes/communityAnswers.routes');
@@ -61,9 +55,6 @@ var cockpitRouter = require('./routes/cockpit.routes');
 var quizRouter = require('./routes/quiz.routes');
 var missionRouter = require('./routes/missions.routes');
 
-=======
-  
->>>>>>> c2997afbe6b936861910b412ff018f31275eb533
 var mongoose = require('mongoose');
 var app = express();
 var dbURI = "mongodb+srv://Developer:developer25@sky-nova.w6bvo.mongodb.net/?retryWrites=true&w=majority&appName=Sky-nova";
@@ -89,14 +80,6 @@ app.all('/',(req,res)=>{
   res.json({"hello":"world"})
 })
 
-<<<<<<< HEAD
-//Routes
-=======
-app.all('/',(req,res)=>{
-  res.json({"hello":"world"})
-});
-
->>>>>>> c2997afbe6b936861910b412ff018f31275eb533
 app.use('/users', usersRouter);
 app.use('/aviators', aviatorRouter);
 app.use('/jets', jetRouter);
@@ -108,7 +91,6 @@ app.use('/certificates', certificateRouter);
 app.use('/resources', resourceRouter);
 app.use('/warHeroes', warHeroRouter);
 app.use('/results', resultRouter);
-<<<<<<< HEAD
 app.use('/complaints',complaintRouter);
 app.use('/suggestions',suggestionRouter);
 app.use('/nonVerbalQuestions',nonVerbalQuestionRouter);
@@ -121,11 +103,6 @@ app.use('/quotes',quoteRouter);
 app.use('/cockpits',cockpitRouter);
 app.use('/quizzes',quizRouter);
 app.use('/missions',missionRouter);
-=======
-app.use('/complaints',complaintRouter)
-app.use('/suggestions',suggestionRouter)
-app.use('/nonVerbalQuestion',nonVerbalQuestionRouter)
->>>>>>> c2997afbe6b936861910b412ff018f31275eb533
 
 app.all('*',function(req, res, next) {
   next(createError(404));
