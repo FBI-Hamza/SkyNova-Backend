@@ -25,7 +25,6 @@ var resultRouter =require('./routes/results.routes');
 var complaintRouter = require('./routes/complaints.routes');
 var suggestionRouter = require('./routes/suggestions.routes');
 var nonVerbalQuestionRouter = require('./routes/nonVerbalQuestion.routes');
-// var nonVerbalQuizRouter = require('./routes/nonverbalQuiz.Routes');
   
 var mongoose = require('mongoose');
 const nonVerbalQuestionModel = require('./models/nonVerbalQuestion.model');
@@ -68,7 +67,6 @@ app.use('/results', resultRouter);
 app.use('/complaints',complaintRouter)
 app.use('/suggestions',suggestionRouter)
 app.use('/nonVerbalQuestion',nonVerbalQuestionRouter)
-// app.use('/nonVerbalQuiz',nonVerbalQuizRouter)
 
 app.all('*',function(req, res, next) {
   next(createError(404));
