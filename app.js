@@ -57,15 +57,15 @@ var missionRouter = require('./routes/missions.routes');
 
 var mongoose = require('mongoose');
 var app = express();
-
+var dbURI = process.env.MONGODB_URI || 'mongodb://0.0.0.0:27017/Skynova';
 mongoose
-  .connect("mongodb://0.0.0.0:27017/Skynova")
+  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Server Started..."))
   .catch((err) => console.log(err));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.set('port', 3000);
+app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'));
 app.use(logger('dev'));
 app.use(express.json({limit:"100mb"}));
