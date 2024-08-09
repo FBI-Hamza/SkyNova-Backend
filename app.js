@@ -31,6 +31,7 @@ io.on('connection', (socket) => {
   });
 });
 
+//Routers
 var usersRouter = require('./routes/users.routes');
 var aviatorRouter = require('./routes/aviators.routes');
 var jetRouter = require('./routes/jets.routes');
@@ -79,6 +80,7 @@ app.all('/',(req,res)=>{
   res.json({"hello":"world"})
 })
 
+//Routes
 app.use('/users', usersRouter);
 app.use('/aviators', aviatorRouter);
 app.use('/jets', jetRouter);
