@@ -77,7 +77,7 @@ app.use(cors());
 app.use(helmet()); 
 
 app.all('/',(req,res)=>{
-  res.json({"hello":"world"})
+  res.json("Deployed")
 })
 
 app.use('/users', usersRouter);

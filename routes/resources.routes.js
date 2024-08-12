@@ -4,7 +4,7 @@ const Resources = require('../controller/resource.controller')
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage()});
 
-router.post('/createResource',upload.single('resourceImg'), Resources.createResource);
+router.post('/createResource',upload.single('resourceImage'), Resources.createResource);
 router.get('/viewResources', Resources.viewResources);
 router.get('/viewResource/:id', Resources.resourceViewById);
 router.get('/countResources', Resources.countResources);
