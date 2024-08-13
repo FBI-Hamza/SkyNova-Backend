@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 var questionSchema = mongoose.Schema({
-    question:{
+    text:{
         type: String,
         required: true
     },
