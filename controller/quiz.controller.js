@@ -70,10 +70,10 @@ exports.createQuiz = async (req, res, next) => {
 
   exports.deleteQuiz = async (req, res, next) => {
     try {
+      console.log(req.params);
+      const quizzes = req.params.id;
 
-      const quiz = req.params.id;
-
-      const deletedquiz = await quiz.deleteOne({ _id: quiz });
+      const deletedquiz = await quiz.deleteOne({ _id: quizzes });
 
       if (deletedquiz.deletedCount === 0) {
         return res.status(404).json({ message: 'Quiz not found' });
