@@ -90,7 +90,7 @@ exports.updateQuiz= async(req, res) => {
     const title = req.params.title;
     const updated = req.body;
     try {
-      const quizzes = await quiz.findOneAndUpdate(title, {$set:updated},{new:true});
+      const quizzes = await quiz.findOneAndUpdate({ title: title }, {$set:updated},{new:true});
 
       if (!quizzes) {
         return res.status(404).send('Quiz not found');
