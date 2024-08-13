@@ -17,7 +17,7 @@ exports.viewQuizzes = async (req, res, next) => {
   exports.viewByTitle = async function(req, res, next) {
     try {
         console.log(req.params);
-        const quizWithQuestions = await quiz.findOne({ _id: req.params.title }).populate('questions');
+        const quizWithQuestions = await quiz.findOne({ title: req.params.title }).populate('questions');
         console.log(quizWithQuestions);
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
