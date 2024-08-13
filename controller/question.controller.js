@@ -1,11 +1,11 @@
 const question  = require('../models/question.model');
 const quizzes = require('../models/quiz.model');
-const { initializeApp } = require('firebase/app');
-const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
-const multer = require('multer');
-const config = require('../firebase.config');
-const app = initializeApp(config.firebaseConfig);
-const storage = getStorage(app);
+// const { initializeApp } = require('firebase/app');
+// const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
+// const multer = require('multer');
+// const config = require('../firebase.config');
+// const app = initializeApp(config.firebaseConfig);
+// const storage = getStorage(app);
 
 exports.viewQuestions = async (req, res, next) => {
     try {
@@ -21,7 +21,7 @@ exports.viewQuestions = async (req, res, next) => {
   };
 
 exports.viewById= async function(req,res,next){
-      question.find({_id:req.params.id}).then((questions)=>{
+      question.findOne({_id:req.params.id}).then((questions)=>{
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -92,7 +92,7 @@ exports.createQuestion = async (req, res, next) => {
   
       await newQuestion.save();
   
-      const quiz = await quizzes.findById(quizId); // Use the correct model name here
+      const quiz = await quizzes.findById(quizId); 
       if (!quiz) {
         return res.status(404).json({ message: 'Quiz not found' });
       }

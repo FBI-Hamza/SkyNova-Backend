@@ -53,6 +53,7 @@ var documentaryRouter = require('./routes/documentaries.routes');
 var quoteRouter = require('./routes/quotes.routes');
 var cockpitRouter = require('./routes/cockpit.routes');
 var quizRouter = require('./routes/quiz.routes');
+var questionRouter = require('./routes/questions.routes');
 var missionRouter = require('./routes/missions.routes');
 
 var mongoose = require('mongoose');
@@ -102,6 +103,7 @@ app.use('/documentaries',documentaryRouter);
 app.use('/quotes',quoteRouter);
 app.use('/cockpits',cockpitRouter);
 app.use('/quizzes',quizRouter);
+app.use('/questions',questionRouter);
 app.use('/missions',missionRouter);
 
 app.all('*',function(req, res, next) {
