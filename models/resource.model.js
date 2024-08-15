@@ -17,6 +17,10 @@ var resourcesSchema = mongoose.Schema({
         type: String,
         required: false
     },
+    content:{
+        type: String,
+        required: false
+    },
     scenario: {
         type: Date,
         default: Date.now

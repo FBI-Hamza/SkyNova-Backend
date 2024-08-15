@@ -17,14 +17,15 @@ const createResource = async (req, res) => {
     };
 
     const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
-    const contentURL = await getDownloadURL(snapshot.ref);
+    const content = await getDownloadURL(snapshot.ref);
     
-    const { title, type, description } = req.body;
+    const { title, type, description, contentURL } = req.body;
     const newResource = new resource({
       title,
       type,
       description,
       contentURL,
+      content
     });
 
     await newResource.save();
