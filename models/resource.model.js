@@ -13,7 +13,7 @@ var resourcesSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    contentURL: {
+    resourceFile: {
         type: String,
         required: false
     },

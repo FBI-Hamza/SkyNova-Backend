@@ -19,12 +19,12 @@ const createResource = async (req, res) => {
     const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
     const content = await getDownloadURL(snapshot.ref);
     
-    const { title, type, description, contentURL } = req.body;
+    const { title, type, description, resourceFile } = req.body;
     const newResource = new resource({
       title,
       type,
       description,
-      contentURL,
+      resourceFile,
       content
     });
 
