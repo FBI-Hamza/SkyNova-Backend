@@ -6,8 +6,6 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 require('dotenv').config();
 
-
-
 exports.signup = async (req, res) => {
     try {
         const { role,firstName,lastName,email, password } = req.body;
@@ -36,7 +34,7 @@ exports.login = async (req, res,next) => {
     try {
         const { email, role, password } = req.body;
         const user = await User.findOne({ email });
-        console.log(password);
+        console.log(role);
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
@@ -154,6 +152,19 @@ exports.verifyPassword = async (req, res) => {
       await user.save();
   
       res.status(200).json({ message: 'Password reset successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+  exports.viewAdmins = async (req, res, next) => {
+    try {
+      const admins = await User.find({ role: 'Admin' });
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', 0);
+      return res.json(admins);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });

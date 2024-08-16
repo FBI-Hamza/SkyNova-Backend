@@ -9,7 +9,7 @@ const storage = getStorage(app);
 const createJet = async (req, res) => {
   try {
     const dateTime = giveCurrentDateTime();
-    const storageRef = ref(storage, `JETS/${req.file.originalname} ${dateTime}`);
+    const storageRef = ref(storage, `Jets/${req.file.originalname} ${dateTime}`);
     const metadata = {
       contentType: req.file.mimetype,
     };
