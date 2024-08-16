@@ -8,25 +8,27 @@ const storage = getStorage(app);
 const createResource = async (req, res) => {
   try {
     console.log(req.body);
-    console.log(req.files);
+    console.log(req.file);
 
     let content;
-    if(req.files){
-    const dateTime = giveCurrentDateTime();
-    const storageRef = ref(storage, `resources/${req.file.originalname} ${dateTime}`);
-    const metadata = {
-      contentType: req.file.mimetype,
-    };
+    if (req.file) {
+      const dateTime = giveCurrentDateTime();
+      const storageRef = ref(storage, `resources/${req.file.originalname} ${dateTime}`);
+      const metadata = {
+        contentType: req.file.mimetype,
+      };
 
-    const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
-    const content = await getDownloadURL(snapshot.ref);
+      const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+      content = await getDownloadURL(snapshot.ref);
     }
+
     const { title, type, description, resourceFile } = req.body;
+
     const newResource = new resource({
       title,
       type,
       description,
-      resourceFile,
+      resourceFile, 
       content
     });
 
@@ -34,7 +36,7 @@ const createResource = async (req, res) => {
     return res.status(200).json({ message: 'Resource created successfully', resource: newResource });
   } catch (error) {
     console.error('Error creating resource:', error);
-    res.status(400).json({ error: error.message });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
