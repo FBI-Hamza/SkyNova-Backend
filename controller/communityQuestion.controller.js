@@ -1,5 +1,5 @@
 const questions = require('../models/communityQuestion.model');
-
+const verifyJWT = require('../auth.middleware');
 
 exports.viewCommunityQuestions = async (req, res, next) => {
     try {
@@ -25,24 +25,45 @@ exports.viewById= async function(req,res,next){
       })   
 };
 
+// exports.createCommunityQuestion = async (req, res, next) => {
+//   try {
+//     const { title,body,answer } = req.body;
+
+//     const newQuestion = new questions({
+//       title,
+//       body,
+//       answer,
+//     });
+
+//     await newQuestion.save();
+
+
+//     res.status(200).json({ message: 'Question created', question: newQuestion });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
+
 exports.createCommunityQuestion = async (req, res, next) => {
   try {
-    const { title,body,answer } = req.body;
+      const { title, body, answers } = req.body;
+      const userId = req.user._id;  // Assuming user ID is set by a middleware
 
-    const newQuestion = new questions({
-      title,
-      body,
-      answer,
-    });
+      const newQuestion = new questions({
+          title,
+          body,
+          author: userId,
+          answers,
+      });
 
-    await newQuestion.save();
+      await newQuestion.save();
 
-
-    res.status(200).json({ message: 'Question created', question: newQuestion });
+      res.status(200).json({ message: 'Question created', question: newQuestion });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+  }
 };
 
   exports.countCommunityQuestions = async (req, res, next) => {

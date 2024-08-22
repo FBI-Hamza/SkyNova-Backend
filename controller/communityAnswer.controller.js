@@ -1,5 +1,6 @@
 const answer = require('../models/communityAnswer.model');
 const question =  require('../models/communityQuestion.model');
+const verifyJWT = require('../auth.middleware');
 
 exports.viewAnswers = async (req, res, next) => {
     try {
@@ -25,31 +26,55 @@ exports.viewById= async function(req,res,next){
       })   
 };
 
-exports.createAnswer = async (req, res, next) => {
-  try {
-    console.log(req.body);
-    const { author,content, questionId } = req.body;
+// exports.createAnswer = async (req, res, next) => {
+//   try {
+//     console.log(req.body);
+//     const { author,content, questionId } = req.body;
 
-    const newAnswer = new answer({
-      author,
-      content,
-    });
+//     const newAnswer = new answer({
+//       author,
+//       content,
+//     });
 
-    await newAnswer.save();
+//     await newAnswer.save();
 
-    const questions = await question.findById(questionId);
-      if (!questions) {
-          return res.status(404).json({ message: 'Question not found' });
-      }
-      questions.answers.push(newAnswer._id);
-      await questions.save();
+//     const questions = await question.findById(questionId);
+//       if (!questions) {
+//           return res.status(404).json({ message: 'Question not found' });
+//       }
+//       questions.answers.push(newAnswer._id);
+//       await questions.save();
 
-    res.status(200).json({ message: 'Answer Posted'});
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
+//     res.status(200).json({ message: 'Answer Posted'});
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
+
+exports.createCommunityAnswer = async (req, res, next) => {
+    try {
+        const { content, questionId } = req.body;
+        const userId = req.user._id;  // User ID from JWT token
+
+        const newAnswer = new answer({
+            content,
+            author: userId,  // Associate the answer with the user's ID
+        });
+
+        await newAnswer.save();
+
+        const questions = await question.findById(questionId);
+        questions.answers.push(newAnswer._id);
+        await questions.save();
+
+        res.status(200).json({ message: 'Answer created', answer: newAnswer });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
 };
+
 
   exports.countAnswers = async (req, res, next) => {
     try {

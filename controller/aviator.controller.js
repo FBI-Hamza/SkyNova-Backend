@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const user = require('../models/user.model');
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
-const multer = require('multer');
 const config = require('../firebase.config');
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
@@ -93,7 +92,8 @@ exports.uploadDP = async (req, res, next) => {
   try {
     const id  = req.body.id; 
     const dateTime = giveCurrentDateTime();
-    const storageRef = ref(storage, `Profile Picture/${req.file.originalname} ${dateTime}`);
+    console.log(req.file.originalname);
+    const storageRef = ref(storage, `ProfilePictures/${req.file.originalname} ${dateTime}`);
 
     const metadata = {
       contentType: req.file.mimetype,

@@ -14,7 +14,13 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const socketio = require('socket.io');
 const server = http.createServer(express);
-const io = socketio(server);
+const io = socketio(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  }
+});
 
 io.on('connection', (socket) => {
   console.log('A user connected');
@@ -74,8 +80,13 @@ app.use(bodyParser.json({limit:"100mb"}));
 app.use(express.urlencoded({ extended: true,parameterLimit:100000,limit:"100mb" }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
-app.use(helmet()); 
+app.use(cors({
+  origin: 'http://localhost:3000', // Specify the client URL
+  credentials: true, 
+}));
+app.use(helmet({
+  contentSecurityPolicy: false, // If you are using inline scripts or styles
+}));
 
 app.all('/',(req,res)=>{
   res.json("Deployed")

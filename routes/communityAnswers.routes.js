@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const answers = require('../controller/communityAnswer.controller')
+const verifyJWT = require('../auth.middleware');
 
-router.post('/createCommunityAnswer', answers.createAnswer);
+router.post('/createCommunityAnswer',verifyJWT, answers.createCommunityAnswer);
 router.get('/viewCommunityAnswers', answers.viewAnswers);
 router.get('/viewCommunityAnswer/:id', answers.viewById);
 router.get('/countCommunityAnswers', answers.countAnswers);
