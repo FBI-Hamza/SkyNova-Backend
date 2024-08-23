@@ -45,7 +45,7 @@ exports.login = async (req, res,next) => {
             expiresIn: '30d', 
         });
         res.cookie('token', token, { httpOnly: true });
-        return res.status(200).json({ message: 'Login Successfully', token,role});
+        return res.status(200).json({ message: 'Login Successfully', token,role,email});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
