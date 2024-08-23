@@ -34,9 +34,10 @@ exports.login = async (req, res,next) => {
     try {
         const { email, role, password } = req.body;
         const user = await User.findOne({ email });
-        console.log(role);
-        const validPassword = await bcrypt.compare(password, user.password);
+        const firstName = user.firstName;
+        const lastName = user.lastName;
 
+        const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -45,7 +46,7 @@ exports.login = async (req, res,next) => {
             expiresIn: '30d', 
         });
         res.cookie('token', token, { httpOnly: true });
-        return res.status(200).json({ message: 'Login Successfully', token,role,email});
+        return res.status(200).json({ message: 'Login Successfully', token,role,email,firstName,lastName});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
