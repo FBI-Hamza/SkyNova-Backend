@@ -53,6 +53,18 @@ exports.login = async (req, res,next) => {
     }
 };
 
+
+exports.logout = (req, res) => {
+  try {
+      res.cookie('token', '', { httpOnly: true, expires: new Date(0) });
+
+      return res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+  }
+};
+
 exports.forgetPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -69,7 +81,6 @@ exports.forgetPassword = async (req, res) => {
     user.resetTokenExpiration = Date.now() + 10 * 60 * 1000; 
     await user.save({ validateBeforeSave: false });
 
-    // Securely store your SendGrid API key using environment variables
     const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
     
 

@@ -4,6 +4,7 @@ const users = require('../controller/users.controller');
 
 router.post('/signup', users.signup);
 router.post('/login', users.login);
+router.post('/logout', users.logout);
 router.post('/forgetPassword', users.forgetPassword);
 router.post('/verifyCode', users.verifyPassword);
 router.post('/resetPassword', users.resetPassword);
