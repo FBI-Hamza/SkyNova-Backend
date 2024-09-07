@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const questions = require('../controller/communityQuestion.controller')
-const verifyJWT = require('../auth.middleware');
+const verifyJWT = require('../auth.middleware'); 
 
 router.post('/createCommunityQuestion',verifyJWT, questions.createCommunityQuestion);
 router.get('/viewCommunityQuestions', questions.viewCommunityQuestions);

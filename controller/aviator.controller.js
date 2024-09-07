@@ -92,7 +92,6 @@ exports.uploadDP = async (req, res, next) => {
   try {
     const id  = req.body.id; 
     const dateTime = giveCurrentDateTime();
-    console.log(req.file.originalname);
     const storageRef = ref(storage, `ProfilePictures/${req.file.originalname} ${dateTime}`);
 
     const metadata = {
