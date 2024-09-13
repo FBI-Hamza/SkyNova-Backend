@@ -69,12 +69,12 @@ exports.viewById= async function(req,res,next){
 exports.createCommunityQuestion = async (req, res, next) => {
   try {
       const { title, body, answers } = req.body;
-      const userName = req.user.userName;  // Assuming user ID is set by a middleware
+      const userID = req.user.userId;  // Assuming user ID is set by a middleware
 
       const newQuestion = new questions({
           title,
           body,
-          author: userName,
+          author: userID,
           answers,
       });
 
@@ -107,7 +107,7 @@ exports.createCommunityQuestion = async (req, res, next) => {
   exports.deleteCommunityQuestion = async (req, res, next) => {
     try {
       const questionId = req.params.id;
-
+      // const deletedQuestion = await questions.deleteMany();
       const deletedQuestion = await questions.deleteOne({ _id: questionId });
 
       if (deletedQuestion.deletedCount === 0) {
