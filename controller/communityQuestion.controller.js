@@ -3,7 +3,7 @@ const verifyJWT = require('../auth.middleware');
 
 exports.viewCommunityQuestions = async (req, res, next) => {
     try {
-      const Questions = await questions.find({}).populate('answers');
+      const Questions = await questions.find({}).populate('author').populate('answers');
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -13,6 +13,27 @@ exports.viewCommunityQuestions = async (req, res, next) => {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+// exports.viewCommunityQuestions = async (req, res, next) => {
+//   try {
+//       const question = await questions.find({})
+//       .populate('author') // Populate the author field of the question
+//       .populate({
+//           path: 'answers',  // Populate the answers field
+//           populate: {
+//               path: 'author',  // Populate the author field inside each answer
+//               // select: 'name email'  // Specify fields to include from the author (adjust as needed)
+//           }
+//       });
+//       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+//       res.setHeader('Pragma', 'no-cache');
+//       res.setHeader('Expires', 0);
+//       return res.json(question);
+//   } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ message: 'Server error' });
+//   }
+// };
 
 exports.viewById= async function(req,res,next){
       questions.find({_id:req.params.id}).populate('answers').then((Questions)=>{
