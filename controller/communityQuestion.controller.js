@@ -48,12 +48,12 @@ exports.viewById= async function(req,res,next){
 exports.createCommunityQuestion = async (req, res, next) => {
   try {
       const { title, body, answers } = req.body;
-      const userId = req.user.userId;  // Assuming user ID is set by a middleware
+      const userName = req.user.userName;  // Assuming user ID is set by a middleware
 
       const newQuestion = new questions({
           title,
           body,
-          author: userId,
+          author: userName,
           answers,
       });
 
