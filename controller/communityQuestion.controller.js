@@ -1,39 +1,39 @@
 const questions = require('../models/communityQuestion.model');
 const verifyJWT = require('../auth.middleware');
 
-exports.viewCommunityQuestions = async (req, res, next) => {
-    try {
-      const Questions = await questions.find({}).populate('author').populate('answers');
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', 0);
-      return res.json(Questions);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-    }
-  };
-
 // exports.viewCommunityQuestions = async (req, res, next) => {
-//   try {
-//       const question = await questions.find({})
-//       .populate('author') // Populate the author field of the question
-//       .populate({
-//           path: 'answers',  // Populate the answers field
-//           populate: {
-//               path: 'author',  // Populate the author field inside each answer
-//               // select: 'name email'  // Specify fields to include from the author (adjust as needed)
-//           }
-//       });
+//     try {
+//       const Questions = await questions.find({}).populate('author');
 //       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 //       res.setHeader('Pragma', 'no-cache');
 //       res.setHeader('Expires', 0);
-//       return res.json(question);
-//   } catch (error) {
+//       return res.json(Questions);
+//     } catch (error) {
 //       console.error(error);
 //       res.status(500).json({ message: 'Server error' });
-//   }
-// };
+//     }
+//   };
+
+exports.viewCommunityQuestions = async (req, res, next) => {
+  try {
+      const question = await questions.find({})
+      .populate('author') // Populate the author field of the question
+      .populate({
+          path: 'answers',  // Populate the answers field
+          populate: {
+              path: 'author',  // Populate the author field inside each answer
+              // select: 'name email'  // Specify fields to include from the author (adjust as needed)
+          }
+      });
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', 0);
+      return res.json(question);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+  }
+};
 
 exports.viewById= async function(req,res,next){
       questions.find({_id:req.params.id}).populate('answers').then((Questions)=>{
@@ -69,12 +69,12 @@ exports.viewById= async function(req,res,next){
 exports.createCommunityQuestion = async (req, res, next) => {
   try {
       const { title, body, answers } = req.body;
-      const userID = req.user.userId;  // Assuming user ID is set by a middleware
+      const userIDD = req.user.userId;  // Assuming user ID is set by a middleware
 
       const newQuestion = new questions({
           title,
           body,
-          author: userID,
+          author: userIDD,
           answers,
       });
 
@@ -107,7 +107,6 @@ exports.createCommunityQuestion = async (req, res, next) => {
   exports.deleteCommunityQuestion = async (req, res, next) => {
     try {
       const questionId = req.params.id;
-      // const deletedQuestion = await questions.deleteMany();
       const deletedQuestion = await questions.deleteOne({ _id: questionId });
 
       if (deletedQuestion.deletedCount === 0) {
