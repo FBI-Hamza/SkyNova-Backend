@@ -6,18 +6,18 @@ const config = require('../firebase.config');
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
 
-// exports.viewAviators = async (req, res, next) => {
-//   try {
-//     const aviator = await user.find({ role: 'Aviator' });
-//     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-//     res.setHeader('Pragma', 'no-cache');
-//     res.setHeader('Expires', 0);
-//     return res.json(aviator);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
+exports.viewAviators = async (req, res, next) => {
+  try {
+    const aviator = await user.find({ role: 'Aviator' });
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', 0);
+    return res.json(aviator);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 // exports.viewAviators = async (req, res, next) => {
 //   try {
@@ -49,35 +49,35 @@ const storage = getStorage(app);
 //   }
 // };
 
-exports.viewAviators = async (req, res, next) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+// exports.viewAviators = async (req, res, next) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
 
-    const skip = (page - 1) * limit;
+//     const skip = (page - 1) * limit;
 
-    const aviators = await user.find({ role: 'Aviator' }).skip(skip).limit(limit);
+//     const aviators = await user.find({ role: 'Aviator' }).skip(skip).limit(limit);
 
-    const total = await user.countDocuments({ role: 'Aviator' });
+//     const total = await user.countDocuments({ role: 'Aviator' });
 
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', 0);
+//     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+//     res.setHeader('Pragma', 'no-cache');
+//     res.setHeader('Expires', 0);
 
-    res.json({
-      data: aviators,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit), // Ensure totalPages is calculated
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+//     res.json({
+//       data: aviators,
+//       meta: {
+//         total,
+//         page,
+//         limit,
+//         totalPages: Math.ceil(total / limit), // Ensure totalPages is calculated
+//       },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
 
 exports.viewById= async function(req,res,next){
     user.findOne({_id:req.params.id}).then((aviator)=>{
