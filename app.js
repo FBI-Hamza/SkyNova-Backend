@@ -62,6 +62,7 @@ var cockpitRouter = require('./routes/cockpit.routes');
 var quizRouter = require('./routes/quiz.routes');
 var questionRouter = require('./routes/questions.routes');
 var missionRouter = require('./routes/missions.routes');
+var medicalDetailsRouter = require('./routes/medicalDetails.routes');
 
 var mongoose = require('mongoose');
 var dbURI = "mongodb+srv://Developer:developer25@sky-nova.w6bvo.mongodb.net/?retryWrites=true&w=majority&appName=Sky-nova";
@@ -116,6 +117,7 @@ app.use('/cockpits',cockpitRouter);
 app.use('/quizzes',quizRouter);
 app.use('/questions',questionRouter);
 app.use('/missions',missionRouter);
+app.use('/medicalDetails',medicalDetailsRouter);
 
 app.all('*',function(req, res, next) {
   next(createError(404));
