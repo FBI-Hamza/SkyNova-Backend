@@ -32,14 +32,14 @@ exports.viewVerbalQuizzes = async (req, res, next) => {
 exports.createVerbalQuiz = async (req, res, next) => {
     try {
       console.log(req.body);
-      const {title,description,questions } = req.body;
+      const {title,description,questions,attempted } = req.body;
 
         const newQuiz = new quiz({
         title,
         description,
         questions,
+        attempted
       });
-  
       await newQuiz.save();
   
       res.status(200).json({ message: 'Verbal Quiz created successfully' });

@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
-const verbalQuestionModel = require("./verbalQuestion.model");
-var verbalQuizSchema = mongoose.Schema({
+var verbalQuizResultSchema = mongoose.Schema({
     title:{
         type: String,
         required: true
@@ -13,11 +12,7 @@ var verbalQuizSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'verbalQuestion',
         required: true
-    }],
-    attempted: {
-        type: Boolean,
-        required:true,
-    }
+    }]
     }
 );
 
