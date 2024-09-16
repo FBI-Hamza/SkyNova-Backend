@@ -143,7 +143,7 @@ exports.createAviator = async (req, res, next) => {
             email,
             password: hashedPassword,
             role: 'Aviator',
-            profilePicture: profilePictureUrl,
+            profileImage: profilePictureUrl,
         });
 
         const savedUser = await newAviator.save();
@@ -168,7 +168,7 @@ exports.uploadDP = async (req, res, next) => {
     const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
     const downloadUrl = await getDownloadURL(snapshot.ref);
 
-    const userOf = await user.findByIdAndUpdate(id, { profilePicture: downloadUrl }, { new: true });
+    const userOf = await user.findByIdAndUpdate(id, { profileImage: downloadUrl }, { new: true });
 
     if (!userOf) {
       return res.status(404).send('User not found');
