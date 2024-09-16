@@ -90,32 +90,70 @@ exports.viewById= async function(req,res,next){
       })   
 };
 
+// exports.createAviator = async (req, res, next) => {
+//     try {
+//       const { firstName,lastName, email, password } = req.body;
+//       const hashedPassword = await bcrypt.hash(password, 10);
+
+//       const existingUser = await user.findOne({ email });
+//       if (existingUser) {
+//           return res.status(400).json({ message: 'Email already exists' });
+//       }
+
+//       const newAviator = new user({
+//         firstName,
+//         lastName,
+//         email,
+//         password: hashedPassword,
+//         role: 'Aviator',
+//       });
+  
+//       const savedUser = await newAviator.save();
+  
+//       res.status(201).json({ message: 'Aviator created successfully' });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ message: 'Server error' });
+//     }
+//   };
+
 exports.createAviator = async (req, res, next) => {
     try {
-      const { firstName,lastName, email, password } = req.body;
-      const hashedPassword = await bcrypt.hash(password, 10);
+        const { firstName, lastName, email, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-      const existingUser = await user.findOne({ email });
-      if (existingUser) {
-          return res.status(400).json({ message: 'Email already exists' });
-      }
+        const existingUser = await user.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
 
-      const newAviator = new user({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-        role: 'Aviator',
-      });
-  
-      const savedUser = await newAviator.save();
-  
-      res.status(201).json({ message: 'Aviator created successfully' });
+        let profilePictureUrl = '';
+        if (req.file) {
+            const dateTime = giveCurrentDateTime();
+            const storageRef = ref(storage, `ProfilePictures/${req.file.originalname}-${dateTime}`);
+            const metadata = { contentType: req.file.mimetype };
+
+            const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+            profilePictureUrl = await getDownloadURL(snapshot.ref);
+        }
+
+        const newAviator = new user({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            role: 'Aviator',
+            profilePicture: profilePictureUrl,
+        });
+
+        const savedUser = await newAviator.save();
+
+        res.status(201).json({ message: 'Aviator created successfully', user: savedUser });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
-  };
+};
 
 exports.uploadDP = async (req, res, next) => {
   try {

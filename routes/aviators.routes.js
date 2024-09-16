@@ -5,7 +5,7 @@ const aviator = require('../controller/aviator.controller')
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage()});
 
-router.post('/createAviator', aviator.createAviator);
+router.post('/createAviator',upload.single('profileImage'), aviator.createAviator);
 router.post('/uploadPicture',upload.single('profileImage'), aviator.uploadDP);
 router.get('/viewAviators', aviator.viewAviators);
 router.get('/viewAviator/:id', aviator.viewById);
