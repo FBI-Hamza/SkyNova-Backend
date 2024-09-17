@@ -12,8 +12,11 @@ var medicalDetailsSchema = mongoose.Schema({
     weight: {
         type: String,
         required: true
+    },
+    medicalFile: {
+        type: String, 
+        required: false
     }
-    
 });
 
 module.exports = mongoose.model('Medical Details', medicalDetailsSchema);

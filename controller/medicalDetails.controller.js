@@ -1,4 +1,9 @@
 const medicalDetails = require('../models/medicalDetails.model');
+const { initializeApp } = require('firebase/app');
+const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
+const config = require('../firebase.config');
+const app = initializeApp(config.firebaseConfig);
+const storage = getStorage(app);
 
 exports.viewMedicalDetails = async (req, res, next) => {
     try {
@@ -25,25 +30,61 @@ exports.viewById= async function(req,res,next){
 };
 
 
+// exports.createMedicalDetails = async (req, res, next) => {
+//     try {
+//       const {eyesight,height,weight} = req.body;
+
+//         const newMedicalDetails = new medicalDetails({
+//         eyesight,
+//         height,
+//         weight,
+//       });
+  
+//       await newMedicalDetails.save();
+  
+//       res.status(200).json({ message: 'medicalDetails created successfully' });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ message: 'Server error' });
+//     }
+//   };
 exports.createMedicalDetails = async (req, res, next) => {
     try {
-      const {eyesight,height,weight} = req.body;
+        const { eyesight, height, weight } = req.body;
+        
+        let fileUrl = '';
+        if (req.file) {
+            const dateTime = giveCurrentDateTime();
+            const storageRef = ref(storage, `MedicalFiles/${req.file.originalname}-${dateTime}`);
+            const metadata = { contentType: req.file.mimetype };
+
+            const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+            fileUrl = await getDownloadURL(snapshot.ref);
+        }
 
         const newMedicalDetails = new medicalDetails({
-        eyesight,
-        height,
-        weight,
-      });
-  
-      await newMedicalDetails.save();
-  
-      res.status(200).json({ message: 'medicalDetails created successfully' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-    }
-  };
+            eyesight,
+            height,
+            weight,
+            medicalFile:fileUrl, 
+        });
 
+        await newMedicalDetails.save();
+
+        res.status(200).json({ message: 'Medical details created successfully', medicalDetails: newMedicalDetails });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+const giveCurrentDateTime = () => {
+  const today = new Date();
+  const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+  const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+  const dateTime = date + ' ' + time;
+  return dateTime;
+};
 
   // exports.countmedicalDetailss = async (req, res, next) => {
   //   try {
