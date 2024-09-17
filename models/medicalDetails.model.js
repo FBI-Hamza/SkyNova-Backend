@@ -9,11 +9,21 @@ var medicalDetailsSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    heightUnit: {
+        type: String,
+        enum:['cm','in'],
+        required: true
+    },
     weight: {
         type: String,
         required: true
     },
-    medicalFile: {
+    weightUnit: {
+        type: String,
+        enum:['lbs','kg'],
+        required: true
+    },
+    medicalReport: {
         type: String, 
         required: false
     }

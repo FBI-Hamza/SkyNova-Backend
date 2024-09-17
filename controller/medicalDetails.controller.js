@@ -50,7 +50,7 @@ exports.viewById= async function(req,res,next){
 //   };
 exports.createMedicalDetails = async (req, res, next) => {
     try {
-        const { eyesight, height, weight } = req.body;
+        const { eyesight, height, weight,weightUnit,heightUnit } = req.body;
         
         let fileUrl = '';
         if (req.file) {
@@ -66,7 +66,9 @@ exports.createMedicalDetails = async (req, res, next) => {
             eyesight,
             height,
             weight,
-            medicalFile:fileUrl, 
+            weightUnit,
+            heightUnit,
+            medicalReport:fileUrl, 
         });
 
         await newMedicalDetails.save();
