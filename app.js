@@ -17,7 +17,6 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
     credentials: true,
   }
@@ -123,7 +122,6 @@ app.all('*',function(req, res, next) {
   next(createError(404));
 });
 
-//This middleware captures errors, sets local variables for error handling, specifies an appropriate HTTP status code, and renders an error view. 
 app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
