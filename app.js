@@ -19,7 +19,7 @@ const io = socketio(server, {
   cors: {
     origin: '*',
     methods: ['GET', 'POST'],
-    credentials: true,
+    // credentials: true,
   }
 });
 
@@ -83,7 +83,7 @@ app.use(cors({
   credentials: true, 
 }));
 app.use(helmet({
-  contentSecurityPolicy: false, // If you are using inline scripts or styles
+  contentSecurityPolicy: false, 
 }));
 
 app.all('/',(req,res)=>{
