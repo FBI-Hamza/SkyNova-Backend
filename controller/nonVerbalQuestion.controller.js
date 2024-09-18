@@ -37,7 +37,7 @@ exports.createNonVerbalQuestion = async (req, res) => {
   try {
     console.log(req.body);
     console.log(req.files);
-    const { quizId, questionText, answerText } = req.body;
+    const { quizId, text, answer } = req.body;
     const { optionsImgs } = req.files;
 
     let questionImgValue;
@@ -57,8 +57,8 @@ exports.createNonVerbalQuestion = async (req, res) => {
       }
     }
     const newQuestion = new nonVerbalQuestion({
-      questionText:questionText,
-      questionImg: questionImgValue,
+      text:questionText,
+      image: questionImgValue,
       options: optionsImageURLs,
       answer: answerText,
     });

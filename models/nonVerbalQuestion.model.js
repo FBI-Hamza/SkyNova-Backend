@@ -1,11 +1,11 @@
 var mongoose = require("mongoose");
 
 var nonVerbalQuestionSchema = mongoose.Schema({
-    questionText:{
+    text:{
         type: String,
-        required: true
+        required: false
     },
-    questionImg:{
+    image:{
         type: String,
         required: false
     },
