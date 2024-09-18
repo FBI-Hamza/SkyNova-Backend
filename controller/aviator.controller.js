@@ -57,8 +57,8 @@ exports.checkEmail = async (req, res, next) => {
   }
 
   try {
-      const user = await user.findOne({ email });
-      if (user) {
+      const users = await user.findOne({ email });
+      if (users) {
           return res.status(200).json({ exists: true });
       } else {
           return res.status(200).json({ exists: false });
