@@ -9,6 +9,7 @@ router.post('/createAviator',upload.single('profileImage'), aviator.createAviato
 router.post('/uploadPicture',upload.single('profileImage'), aviator.uploadDP);
 router.get('/viewAviators', aviator.viewAviators);
 router.get('/viewAviator/:id', aviator.viewById);
+router.get('/checkEmail',aviator.checkEmail);
 router.get('/countAviators', aviator.countAviators);
 router.delete('/deleteAviator/:id', aviator.deleteAviator);
 router.patch('/updateAviator/:id', aviator.updateAviator);

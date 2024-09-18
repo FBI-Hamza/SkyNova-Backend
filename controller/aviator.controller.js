@@ -49,6 +49,26 @@ const storage = getStorage(app);
 //   }
 // };
 
+exports.checkEmail = async (req, res, next) => {
+  const { email } = req.query;
+
+  if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+  }
+
+  try {
+      const user = await user.findOne({ email });
+      if (user) {
+          return res.status(200).json({ exists: true });
+      } else {
+          return res.status(200).json({ exists: false });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+  }
+};
+
 exports.viewAviators = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
