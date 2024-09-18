@@ -79,7 +79,7 @@ app.use(express.urlencoded({ extended: true,parameterLimit:100000,limit:"100mb" 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
-  origin: '*', 
+  origin: 'http://localhost:3000', 
   credentials: true, 
 }));
 app.use(helmet({
