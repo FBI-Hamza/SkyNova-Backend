@@ -26,13 +26,10 @@ const io = socketio(server, {
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  // Listen for chat messages
   socket.on('chat message', (msg) => {
-    // Broadcast the message to all connected users
     io.emit('chat message', msg);
   });
 
-  // Handle disconnection
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
@@ -82,7 +79,7 @@ app.use(express.urlencoded({ extended: true,parameterLimit:100000,limit:"100mb" 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
-  origin: 'http://localhost:3000', // Specify the client URL
+  origin: '*', 
   credentials: true, 
 }));
 app.use(helmet({
