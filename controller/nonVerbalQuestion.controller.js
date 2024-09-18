@@ -33,34 +33,88 @@ exports.viewById= async function(req,res,next){
 };
 
 
+// exports.createNonVerbalQuestion = async (req, res) => {
+//   try {
+//     console.log(req.body);
+//     console.log(req.files);
+//     const { quizId, text, answer } = req.body;
+//     const { optionsImgs } = req.files;
+
+//     let questionImgValue;
+//     if(req.files.questionImg){
+//     const questionRef = ref(storage, `nonVerbalQuestions/${req.files.questionImg[0].originalname}`);
+//     await uploadBytesResumable(questionRef, req.files.questionImg[0].buffer);
+//     questionImgValue = await getDownloadURL(questionRef);
+//     }
+
+//     const optionsImageURLs = [];
+//     if (optionsImgs && optionsImgs.length > 0) {
+//       for (const optionImage of optionsImgs) {
+//         const optionImageRef = ref(storage, `nonVerbalQuestions/${optionImage.originalname}`);
+//         await uploadBytesResumable(optionImageRef, optionImage.buffer);
+//         const optionImageURL = await getDownloadURL(optionImageRef);
+//         optionsImageURLs.push(optionImageURL);
+//       }
+//     }
+//     const newQuestion = new nonVerbalQuestion({
+//       text:questionText,
+//       image: questionImgValue,
+//       options: optionsImageURLs,
+//       answer: answerText,
+//     });
+
+//     await newQuestion.save();
+
+//     const quiz = await nonVerbalQuiz.findById(quizId);
+//     if (!quiz) {
+//       return res.status(404).json({ message: 'Quiz not found' });
+//     }
+//     quiz.questions.push(newQuestion._id);
+//     await quiz.save();
+
+//     return res.status(200).json({ message: 'Question created and added to the quiz successfully', question: newQuestion });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
+
+
 exports.createNonVerbalQuestion = async (req, res) => {
   try {
     console.log(req.body);
     console.log(req.files);
-    const { quizId, text, answer } = req.body;
-    const { optionsImgs } = req.files;
+
+    const { quizId, text, answer, options } = req.body; // Expecting options as an array of objects
+    const { questionImg } = req.files;
 
     let questionImgValue;
-    if(req.files.questionImg){
-    const questionRef = ref(storage, `nonVerbalQuestions/${req.files.questionImg[0].originalname}`);
-    await uploadBytesResumable(questionRef, req.files.questionImg[0].buffer);
-    questionImgValue = await getDownloadURL(questionRef);
+    if (questionImg && questionImg.length > 0) {
+      const questionRef = ref(storage, `nonVerbalQuestions/${questionImg[0].originalname}`);
+      await uploadBytesResumable(questionRef, questionImg[0].buffer);
+      questionImgValue = await getDownloadURL(questionRef);
     }
 
-    const optionsImageURLs = [];
-    if (optionsImgs && optionsImgs.length > 0) {
-      for (const optionImage of optionsImgs) {
-        const optionImageRef = ref(storage, `nonVerbalQuestions/${optionImage.originalname}`);
-        await uploadBytesResumable(optionImageRef, optionImage.buffer);
+    const optionsWithImages = [];
+    if (options && options.length > 0) {
+      for (const option of options) {
+        const optionImageRef = ref(storage, `nonVerbalQuestions/${option.image.originalname}`);
+        await uploadBytesResumable(optionImageRef, option.image.buffer);
         const optionImageURL = await getDownloadURL(optionImageRef);
-        optionsImageURLs.push(optionImageURL);
+        
+        optionsWithImages.push({
+          label: option.label,
+          image: optionImageURL, // Assign the uploaded image URL
+        });
       }
     }
+
     const newQuestion = new nonVerbalQuestion({
-      text:questionText,
-      image: questionImgValue,
-      options: optionsImageURLs,
-      answer: answerText,
+      text: text,
+      image: questionImgValue, // Store the question image URL
+      options: optionsWithImages, // Use the new options structure
+      answer: answer,
+      quizId: quizId, // Link to the quiz if applicable
     });
 
     await newQuestion.save();
@@ -69,6 +123,7 @@ exports.createNonVerbalQuestion = async (req, res) => {
     if (!quiz) {
       return res.status(404).json({ message: 'Quiz not found' });
     }
+
     quiz.questions.push(newQuestion._id);
     await quiz.save();
 
