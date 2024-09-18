@@ -10,7 +10,7 @@ const createResource = async (req, res) => {
     console.log(req.body);
     console.log(req.file);
 
-    let content;
+    let resourceFile;
     if (req.file) {
       const dateTime = giveCurrentDateTime();
       const storageRef = ref(storage, `resources/${req.file.originalname} ${dateTime}`);
@@ -19,17 +19,17 @@ const createResource = async (req, res) => {
       };
 
       const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
-      content = await getDownloadURL(snapshot.ref);
+      resourceFile = await getDownloadURL(snapshot.ref);
     }
 
-    const { title, type, description, resourceFile } = req.body;
+    const { title, type, description, resourceImage } = req.body;
 
     const newResource = new resource({
       title,
       type,
       description,
-      resourceFile, 
-      content
+      resourceImage, 
+      resourceFile
     });
 
     await newResource.save();

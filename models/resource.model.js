@@ -13,11 +13,11 @@ var resourcesSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    resourceFile: {
+    resourceImage:{
         type: String,
         required: false
     },
-    content:{
+    resourceFile: {
         type: String,
         required: false
     },
