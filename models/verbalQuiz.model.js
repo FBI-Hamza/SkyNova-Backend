@@ -16,7 +16,7 @@ var verbalQuizSchema = mongoose.Schema({
     }],
     attempted: {
         type: Boolean,
-        required:true,
+        default: false 
     }
     }
 );

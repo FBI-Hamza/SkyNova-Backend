@@ -55,12 +55,13 @@ exports.viewNonVerbalQuizzes = async (req, res, next) => {
 exports.createNonVerbalQuiz = async (req, res, next) => {
   try {
       console.log(req.body);
-      const { title, description, questions } = req.body;
+      const { title, description, questions, attempted } = req.body;
 
       const newNonVerbalQuiz = new nonVerbalQuiz({
           title,
           description,
           questions,
+          attempted
       });
 
       const savedQuiz = await newNonVerbalQuiz.save();

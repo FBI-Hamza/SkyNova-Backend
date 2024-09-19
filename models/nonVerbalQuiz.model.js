@@ -14,7 +14,11 @@ var nonVerbalQuizSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'nonVerbalQuestion',
         required: true
-    }]
+    }],
+    attempted: {
+        type: Boolean,
+        default: false 
+    }
     }
 );
 
