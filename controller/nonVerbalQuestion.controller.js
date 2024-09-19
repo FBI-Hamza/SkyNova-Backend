@@ -85,8 +85,9 @@ exports.createNonVerbalQuestion = async (req, res) => {
     console.log(req.body);
     console.log(req.files);
 
-    const { quizId, text, answer, options } = req.body; // Expecting options as an array of objects
-    const { questionImg } = req.files;
+    const { quizId, text, answer,  } = req.body; 
+    let {options} = req.body;
+    const { questionImg } = req.files || {}
 
     let questionImgValue;
     if (questionImg && questionImg.length > 0) {
@@ -97,6 +98,7 @@ exports.createNonVerbalQuestion = async (req, res) => {
 
     const optionsWithImages = [];
     if (options && options.length > 0) {
+      options = options.filter(option=> option.image && option.image.length);
       for (const option of options) {
         const optionImageRef = ref(storage, `nonVerbalQuestions/${option.image.originalname}`);
         await uploadBytesResumable(optionImageRef, option.image.buffer);

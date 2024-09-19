@@ -40,6 +40,10 @@ var nonVerbalQuestionSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    image: {
+        type: String,
+        required: false
+    },
     options: {
         type: [optionSchema], 
         required: true
@@ -55,4 +59,4 @@ var nonVerbalQuestionSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('NonVerbalQuestion', nonVerbalQuestionSchema);
+module.exports = mongoose.model('nonVerbalQuestion', nonVerbalQuestionSchema);

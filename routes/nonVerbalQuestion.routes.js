@@ -7,7 +7,7 @@ const upload = multer({
     limits: { fileSize: 50 * 1024 * 1024 }
   });
 
-router.post('/createNonVerbalQuestion',upload.fields([{ name: 'questionImg', maxCount: 1 },{ name: 'optionsImgs', maxCount: 4 },]), nonVerbalQuestion.createNonVerbalQuestion);
+router.post('/createNonVerbalQuestion',upload.fields([{ name: 'questionImg', maxCount: 1, },{ name: 'optionsImgs', maxCount: 4 },]), nonVerbalQuestion.createNonVerbalQuestion);
 router.get('/viewNonVerbalQuestion', nonVerbalQuestion.viewNonVerbalQuestion);
 router.get('/viewNonVerbalQuestion/:id', nonVerbalQuestion.viewById);
 router.get('/countNonVerbalQuestions', nonVerbalQuestion.countNonVerbalQuestions);
