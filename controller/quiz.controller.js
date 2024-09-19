@@ -35,12 +35,13 @@ exports.viewQuizzes = async (req, res, next) => {
 exports.createQuiz = async (req, res, next) => {
     try {
       console.log(req.body);
-      const {title,description,questions } = req.body;
+      const {title,description,questions,isAttempted } = req.body;
 
         const newquiz = new quiz({
         title,
         description,
         questions,
+        isAttempted
       });
   
       await newquiz.save();

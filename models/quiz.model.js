@@ -1,12 +1,12 @@
 var mongoose = require("mongoose");
-const Question  = require('../models/question.model');
+const Question = require('../models/question.model');
 
 var quizSchema = mongoose.Schema({
-    title:{
+    title: {
         type: String,
         required: true
     },
-    description:{
+    description: {
         type: String,
         required: false
     },
@@ -14,8 +14,11 @@ var quizSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Question',
         required: false
-    }]
+    }],
+    isAttempted: {
+        type: Boolean,
+        default: false 
     }
-);
+});
 
 module.exports = mongoose.model('Quiz', quizSchema);
