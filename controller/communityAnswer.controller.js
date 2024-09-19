@@ -4,7 +4,7 @@ const verifyJWT = require('../auth.middleware');
 
 exports.viewAnswers = async (req, res, next) => {
     try {
-      const answers = await answer.find({});
+      const answers = await answer.find({}).populate('author');
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -16,7 +16,7 @@ exports.viewAnswers = async (req, res, next) => {
   };
 
 exports.viewById= async function(req,res,next){
-      answer.findOne({_id:req.params.id}).then((answers)=>{
+      answer.findOne({_id:req.params.id}).populate('author').then((answers)=>{
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
