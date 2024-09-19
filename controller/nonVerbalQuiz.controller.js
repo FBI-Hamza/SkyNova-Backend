@@ -32,25 +32,48 @@ exports.viewNonVerbalQuizzes = async (req, res, next) => {
 };
 
 
-exports.createNonVerbalQuiz = async (req, res, next) => {
-    try {
-      console.log(req.body);
-      const {title,description,questions } = req.body;
+// exports.createNonVerbalQuiz = async (req, res, next) => {
+//     try {
+//       console.log(req.body);
+//       const {title,description,questions } = req.body;
 
-        const newNonVerbalQuiz = new nonVerbalQuiz({
-        title,
-        description,
-        questions,
+//         const newNonVerbalQuiz = new nonVerbalQuiz({
+//         title,
+//         description,
+//         questions,
+//       });
+  
+//       await newNonVerbalQuiz.save();
+  
+//       res.status(200).json({ message: 'Non Verbal Quiz created successfully' });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ message: 'Server error' });
+//     }
+//   };
+
+exports.createNonVerbalQuiz = async (req, res, next) => {
+  try {
+      console.log(req.body);
+      const { title, description, questions } = req.body;
+
+      const newNonVerbalQuiz = new nonVerbalQuiz({
+          title,
+          description,
+          questions,
       });
-  
-      await newNonVerbalQuiz.save();
-  
-      res.status(200).json({ message: 'Non Verbal Quiz created successfully' });
-    } catch (error) {
+
+      const savedQuiz = await newNonVerbalQuiz.save();
+
+      res.status(200).json({
+          message: 'Non Verbal Quiz created successfully',
+          quizId: savedQuiz._id, 
+      });
+  } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
-    }
-  };
+  }
+};
 
 
   exports.countNonVerbalQuizzes = async (req, res, next) => {
