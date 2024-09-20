@@ -135,9 +135,6 @@ exports.viewById= async function(req,res,next){
 //     res.status(500).json({ message: 'Server error' });
 //   }
 // };
-const nonVerbalQuestion = require('../models/nonVerbalQuestion.model');
-const nonVerbalQuiz = require('../models/nonVerbalQuiz.model');
-const { ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage');
 
 exports.createNonVerbalQuestion = async (req, res) => {
   try {
