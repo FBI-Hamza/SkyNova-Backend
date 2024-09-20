@@ -55,11 +55,11 @@ exports.viewById= async function(req,res,next){
 exports.createCommunityAnswer = async (req, res, next) => {
     try {
         const { content, questionId } = req.body;
-        const userId = req.user.userId;  // User ID from JWT token
+        const userId = req.user.userId; 
 
         const newAnswer = new answer({
             content,
-            author: userId,  // Associate the answer with the user's ID
+            author: userId, 
         });
 
         await newAnswer.save();
