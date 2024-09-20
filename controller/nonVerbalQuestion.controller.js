@@ -167,7 +167,7 @@ exports.createNonVerbalQuestion = async (req, res) => {
       for (const option of options) {
         if (option.image && option.image.length) {
           const optionImageRef = ref(storage, `nonVerbalQuestions/${option.image.originalname}`);
-          await uploadBytesResumable(optionImageRef, option.image.buffer);
+          await uploadBytesResumable(optionImageRef, option.image);
           const optionImageURL = await getDownloadURL(optionImageRef);
           
           optionsWithImages.push({
