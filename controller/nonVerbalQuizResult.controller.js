@@ -2,6 +2,7 @@ const nonVerbalQuizResult = require('../models/nonVerbalQuizResult.model'); // A
 
 exports.viewNonVerbalQuizResults = async (req, res, next) => {
     try {
+        
         const results = await nonVerbalQuizResult.find({}).populate('userId quizId');
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
@@ -32,16 +33,16 @@ exports.viewResultById = async (req, res, next) => {
 // Create a new verbal quiz result
 exports.createNonVerbalQuizResult = async (req, res, next) => {
     try {
-        const { userId, quizId, score } = req.body;
-
+        const {  quizId, score } = req.body;
+        const userIDD = req.user.userId;
         const newResult = new nonVerbalQuizResult({
-            userId,
+            userId:userIDD,
             quizId,
             score
         });
         await newResult.save();
 
-        res.status(200).json({ message: 'Verbal Quiz result created successfully' });
+        res.status(200).json({ message: 'Non Verbal Quiz result created successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
