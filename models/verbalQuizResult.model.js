@@ -15,7 +15,7 @@ var verbalQuizResultSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    answers:{
+    answers: {
         type: [String],
         required: false
     },
