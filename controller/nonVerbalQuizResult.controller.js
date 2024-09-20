@@ -43,7 +43,7 @@ exports.createNonVerbalQuizResult = async (req, res, next) => {
         });
         await newResult.save();
 
-        res.status(200).json({ message: 'Non Verbal Quiz result created successfully' });
+        res.status(200).json({ message: 'Non Verbal Quiz result created successfully', NonVerbalQuizResult: newResult});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
