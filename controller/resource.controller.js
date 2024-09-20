@@ -8,7 +8,7 @@ const storage = getStorage(app);
 const createResource = async (req, res) => {
   try {
     console.log(req.body);
-    console.log(req.file);
+    console.log(req.file.originalname);
 
     let resourceFile;
     if (req.file) {
