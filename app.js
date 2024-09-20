@@ -17,7 +17,6 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: '*',
     methods: ['GET', 'POST'],
     // credentials: true,
   }
@@ -81,7 +80,6 @@ app.use(express.urlencoded({ extended: true,parameterLimit:100000,limit:"100mb" 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
-  origin: '*', 
   credentials: true, 
 }));
 app.use(helmet({
