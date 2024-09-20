@@ -36,7 +36,7 @@ exports.viewCommunityQuestions = async (req, res, next) => {
 };
 
 exports.viewById= async function(req,res,next){
-      questions.find({_id:req.params.id}).populate('answers').then((Questions)=>{
+      questions.find({_id:req.params.id}).populate('answer').populate('author').then((Questions)=>{
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);

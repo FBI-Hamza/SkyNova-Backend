@@ -14,21 +14,46 @@ exports.viewNonVerbalQuizResults = async (req, res, next) => {
     }
 };
 
-// View verbal quiz result by ID
 exports.viewResultById = async (req, res, next) => {
     try {
-        const result = await nonVerbalQuizResult.findOne({ _id: req.params.id }).populate('userId quizId');
+        const quizId = req.params.quizId; 
+        console.log(quizId);
+        const results = await nonVerbalQuizResult.find({ 'quizId._id': quizId }).populate('userId quizId');
+
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
         res.setHeader('Expires', 0);
-        if (!result) {
-            return res.status(404).json({ message: "Verbal Quiz result not found" });
+        
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No non-verbal quiz results found for this quiz" });
         }
-        res.json(result);
+        res.json(results);
     } catch (error) {
         next(error);
     }
 };
+
+// exports.viewResultById = async (req, res, next) => {
+//     try {
+//         const quizId = req.params.quizId; 
+//         console.log(quizId);
+
+//         // Convert quizId to ObjectId
+//         const results = await nonVerbalQuizResult.find({ quizId: mongoose.Types.ObjectId(quizId._id) }).populate('userId quizId');
+
+//         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+//         res.setHeader('Pragma', 'no-cache');
+//         res.setHeader('Expires', 0);
+        
+//         if (results.length === 0) {
+//             return res.status(404).json({ message: "No non-verbal quiz results found for this quiz" });
+//         }
+
+//         res.json(results);
+//     } catch (error) {
+//         next(error);
+//     }
+// };
 
 // Create a new verbal quiz result
 exports.createNonVerbalQuizResult = async (req, res, next) => {
