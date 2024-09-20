@@ -4,14 +4,14 @@ var verbalQuizResultSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', 
-        required: true
+        required: false
     },
     quizId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'verbalQuiz', 
         required: true
     },
-    score: {
+    marks: {
         type: Number,
         required: true
     },

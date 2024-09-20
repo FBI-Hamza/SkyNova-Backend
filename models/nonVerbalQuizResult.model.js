@@ -11,7 +11,7 @@ var nonVerbalQuizResultSchema = mongoose.Schema({
         ref: 'nonVerbalQuiz', 
         required: true
     },
-    score: {
+    marks: {
         type: Number,
         required: true
     },

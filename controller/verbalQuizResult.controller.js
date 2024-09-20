@@ -33,14 +33,14 @@ exports.viewResultById = async (req, res, next) => {
 // Create a new verbal quiz result
 exports.createVerbalQuizResult = async (req, res, next) => {
     try {
-        const { userId, quizId, score } = req.body;
+        const { userId, quizId, marks } = req.body;
         const userIDD = req.user.userId;
 
         const newResult = new VerbalQuizResult({
             userId:userIDD,
             quizId,
             answers,
-            score
+            marks
 
         });
         await newResult.save();
