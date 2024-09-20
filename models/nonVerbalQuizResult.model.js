@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-var verbalQuizResultSchema = mongoose.Schema({
+var nonVerbalQuizResultSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', 
@@ -8,7 +8,7 @@ var verbalQuizResultSchema = mongoose.Schema({
     },
     quizId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'verbalQuiz', 
+        ref: 'nonVerbalQuiz', 
         required: true
     },
     score: {
@@ -21,4 +21,4 @@ var verbalQuizResultSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('VerbalQuizResult', verbalQuizResultSchema);
+module.exports = mongoose.model('nonVerbalQuizResult', nonVerbalQuizResultSchema);
