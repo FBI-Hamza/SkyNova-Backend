@@ -1,5 +1,5 @@
 const Result = require('../models/result.model'); 
-const Quiz = require('../models/Quiz.model'); 
+const Quiz = require('../models/quiz.model'); 
 
 exports.viewQuizResults = async (req, res, next) => {
     try {
