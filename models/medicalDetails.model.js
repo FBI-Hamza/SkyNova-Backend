@@ -1,6 +1,10 @@
 var mongoose = require("mongoose");
 
 var medicalDetailsSchema = mongoose.Schema({
+    userId:{
+        type: String,
+        required: true
+    },
     eyesight:{
         type: String,
         required: true

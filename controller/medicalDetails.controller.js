@@ -7,7 +7,7 @@ const storage = getStorage(app);
 
 exports.viewMedicalDetails = async (req, res, next) => {
     try {
-      const medicalDetailss = await medicalDetails.find({});
+      const medicalDetailss = await medicalDetails.find({}).populate(userId);
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -19,7 +19,7 @@ exports.viewMedicalDetails = async (req, res, next) => {
   };
 
 exports.viewById= async function(req,res,next){
-    medicalDetails.find({_id:req.params.id}).then((medicalDetailss)=>{
+    medicalDetails.find({_id:req.params.id}).populate(userId).then((medicalDetailss)=>{
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -51,7 +51,7 @@ exports.viewById= async function(req,res,next){
 exports.createMedicalDetails = async (req, res, next) => {
     try {
         const { eyesight, height, weight,weightUnit,heightUnit } = req.body;
-        
+        const userIDD = req.user.userId
         let fileUrl = '';
         if (req.file) {
             const dateTime = giveCurrentDateTime();
@@ -63,6 +63,7 @@ exports.createMedicalDetails = async (req, res, next) => {
         }
 
         const newMedicalDetails = new medicalDetails({
+            userId: userIDD,
             eyesight,
             height,
             weight,
