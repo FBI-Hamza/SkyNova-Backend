@@ -136,6 +136,69 @@ exports.viewById= async function(req,res,next){
 //   }
 // };
 
+// exports.createNonVerbalQuestion = async (req, res) => {
+//   try {
+//     console.log(req.body);
+//     console.log(req.files);
+
+//     const { quizId, text, answer, options } = req.body; 
+//     const { questionImg } = req.files || {};
+
+//     if (!quizId || !text || !answer || !Array.isArray(options)) {
+//       return res.status(400).json({ message: 'Quiz ID, text, answer, and options are required' });
+//     }
+
+//     const quiz = await nonVerbalQuiz.findById(quizId);
+//     if (!quiz) {
+//       return res.status(404).json({ message: 'Quiz not found' });
+//     }
+
+//     let questionImgValue;
+//     if (questionImg && questionImg.length > 0) {
+//       const questionRef = ref(storage, `nonVerbalQuestions/${questionImg[0].originalname}`);
+//       await uploadBytesResumable(questionRef, questionImg[0]);
+//       questionImgValue = await getDownloadURL(questionRef);
+//     }
+
+//     const optionsWithImages = [];
+//     if (options && options.length > 0) {
+//       for (const option of options) {
+//         if (option.image && option.image.length) {
+//           const blob = base64ToBlob(option.image, 'image/png');
+//           const optionImageRef = ref(storage, `nonVerbalQuestions/${blob}`);
+//           await uploadBytesResumable(optionImageRef, blob);
+//           const optionImageURL = await getDownloadURL(optionImageRef);
+//           console.log('URL :',optionImageURL);
+//           optionsWithImages.push({
+//             label: option.label,
+//             image: optionImageURL,
+//           });
+//         } else {
+//           optionsWithImages.push({ label: option.label });
+//         }
+//       }
+//     }
+
+//     const newQuestion = new nonVerbalQuestion({
+//       text,
+//       image: questionImgValue,
+//       options: optionsWithImages,
+//       answer,
+//       quizId,
+//     });
+
+//     await newQuestion.save();
+
+//     quiz.questions.push(newQuestion._id);
+//     await quiz.save();
+
+//     return res.status(201).json({ message: 'Question created and added to the quiz successfully', question: newQuestion });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Server error', error: error.message });
+//   }
+// };
+
 exports.createNonVerbalQuestion = async (req, res) => {
   try {
     console.log(req.body);
@@ -144,9 +207,8 @@ exports.createNonVerbalQuestion = async (req, res) => {
     const { quizId, text, answer, options } = req.body; 
     const { questionImg } = req.files || {};
 
-    // Validate input
-    if (!quizId || !text || !answer || !Array.isArray(options)) {
-      return res.status(400).json({ message: 'Quiz ID, text, answer, and options are required' });
+    if (!quizId || !text || !answer || !Array.isArray(options) || options.length === 0) {
+      return res.status(400).json({ message: 'Quiz ID, text, answer, and non-empty options are required' });
     }
 
     // Check if quiz exists
@@ -157,34 +219,29 @@ exports.createNonVerbalQuestion = async (req, res) => {
 
     let questionImgValue;
     if (questionImg && questionImg.length > 0) {
-      const questionRef = ref(storage, `nonVerbalQuestions/${questionImg[0].originalname}`);
+      const questionRef = ref(storage, `nonVerbalQuestions/${Date.now()}-${questionImg[0].originalname}`);
       await uploadBytesResumable(questionRef, questionImg[0]);
       questionImgValue = await getDownloadURL(questionRef);
     }
 
-    const optionsWithImages = [];
-    if (options && options.length > 0) {
-      for (const option of options) {
-        if (option.image && option.image.length) {
-          const blob = base64ToBlob(option.image, 'image/png');
-          const optionImageRef = ref(storage, `nonVerbalQuestions/${blob}`);
-          await uploadBytesResumable(optionImageRef, blob);
-          const optionImageURL = await getDownloadURL(optionImageRef);
-          console.log('URL :',optionImageURL);
-          optionsWithImages.push({
-            label: option.label,
-            image: optionImageURL,
-          });
-        } else {
-          optionsWithImages.push({ label: option.label });
-        }
+    const optionsWithImages = options.map(async (option) => {
+      if (option.image && option.image.length) {
+        const blob = base64ToBlob(option.image, 'image/png');
+        const optionImageRef = ref(storage, `nonVerbalQuestions/${Date.now()}-${blob.name}`); // Ensure unique names
+        await uploadBytesResumable(optionImageRef, blob);
+        const optionImageURL = await getDownloadURL(optionImageRef);
+        return { label: option.label, image: optionImageURL };
       }
-    }
+      return { label: option.label };
+    });
+
+    // Wait for all option image uploads to complete
+    const resolvedOptionsWithImages = await Promise.all(optionsWithImages);
 
     const newQuestion = new nonVerbalQuestion({
       text,
       image: questionImgValue,
-      options: optionsWithImages,
+      options: resolvedOptionsWithImages,
       answer,
       quizId,
     });
