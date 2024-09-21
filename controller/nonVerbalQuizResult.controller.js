@@ -17,8 +17,8 @@ exports.viewNonVerbalQuizResults = async (req, res, next) => {
 exports.viewResultById = async (req, res, next) => {
     try {
         const quizId = req.params.quizId; 
-        console.log(quizId);
-        const results = await nonVerbalQuizResult.find({ quizId }).populate('userId quizId');
+        const userId = req.user.userId; 
+        const results = await nonVerbalQuizResult.find({ quizId,userId }).populate('userId quizId');
 
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
