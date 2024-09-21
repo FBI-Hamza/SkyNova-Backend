@@ -17,20 +17,35 @@ exports.viewVerbalQuizResults = async (req, res, next) => {
 // View verbal quiz result by ID
 exports.viewResultById = async (req, res, next) => {
     try {
-        const result = await VerbalQuizResult.findOne({ _id: req.params.id }).populate('userId').populate('quizId');
+        const quizId = req.params.quizId; 
+        const userId = req.user.userId; 
+        console.log('Quiz Id',quizId);
+        console.log('User Id', userId);
+
+        const results = await VerbalQuizResult
+            .find({ quizId,userId })
+            .populate('userId')
+            .populate({ 
+                path: 'quizId', 
+                populate: { 
+                    path: 'questions' 
+                } 
+            });
+
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
         res.setHeader('Expires', 0);
-        if (!result) {
-            return res.status(404).json({ message: "Verbal Quiz result not found" });
+        
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No verbal quiz results found for this quiz" });
         }
-        res.json(result);
+        return res.status(200).json({ results });
     } catch (error) {
-        next(error);
+        console.error("Error fetching quiz results:", error);
+        return res.status(500).json({ message: "An error occurred while fetching results." });
     }
 };
 
-// Create a new verbal quiz result
 exports.createVerbalQuizResult = async (req, res, next) => {
     try {
         const { userId, quizId, answers,marks } = req.body;
