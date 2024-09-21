@@ -6,7 +6,7 @@ const multer = require('multer');
 const config = require('../firebase.config');
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
-
+const base64ToBlob = require('../base64toblob');
 
 exports.viewNonVerbalQuestion = async (req, res, next) => {
     try {
@@ -158,7 +158,7 @@ exports.createNonVerbalQuestion = async (req, res) => {
     let questionImgValue;
     if (questionImg && questionImg.length > 0) {
       const questionRef = ref(storage, `nonVerbalQuestions/${questionImg[0].originalname}`);
-      await uploadBytesResumable(questionRef, questionImg[0].buffer);
+      await uploadBytesResumable(questionRef, questionImg[0]);
       questionImgValue = await getDownloadURL(questionRef);
     }
 
@@ -166,8 +166,9 @@ exports.createNonVerbalQuestion = async (req, res) => {
     if (options && options.length > 0) {
       for (const option of options) {
         if (option.image && option.image.length) {
-          const optionImageRef = ref(storage, `nonVerbalQuestions/${option.image.originalname}`);
-          await uploadBytesResumable(optionImageRef, option.image);
+          const blob = base64ToBlob(option.image, 'image/png');
+          const optionImageRef = ref(storage, `nonVerbalQuestions/${blob}`);
+          await uploadBytesResumable(optionImageRef, blob);
           const optionImageURL = await getDownloadURL(optionImageRef);
           
           optionsWithImages.push({
