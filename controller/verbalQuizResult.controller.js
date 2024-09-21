@@ -1,4 +1,5 @@
 const VerbalQuizResult = require('../models/verbalQuizResult.model'); 
+const VerbalQuiz = require('../models/verbalQuiz.model'); 
 
 // View all verbal quiz results
 exports.viewVerbalQuizResults = async (req, res, next) => {
@@ -57,7 +58,13 @@ exports.createVerbalQuizResult = async (req, res, next) => {
 
         });
         await newResult.save();
-
+        const quiz = await VerbalQuiz.findById(quizId);
+        if (quiz) {
+            quiz.attempted = true; 
+        await quiz.save();
+        } else {
+        console.warn('Quiz not found, skipping attribute update');
+        }
         res.status(200).json({ message: 'Verbal Quiz result created successfully' });
     } catch (error) {
         console.error(error);

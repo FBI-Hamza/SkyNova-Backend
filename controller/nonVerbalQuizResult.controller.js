@@ -1,4 +1,5 @@
 const nonVerbalQuizResult = require('../models/nonVerbalQuizResult.model'); // Adjust the path as necessary
+const nonVerbalQuiz = require('../models/nonVerbalQuiz.model');
 
 exports.viewNonVerbalQuizResults = async (req, res, next) => {
     try {
@@ -79,6 +80,13 @@ exports.createNonVerbalQuizResult = async (req, res, next) => {
         });
         await newResult.save();
 
+        const quiz = await nonVerbalQuiz.findById(quizId);
+        if (quiz) {
+            quiz.attempted = true; // Set the 'attempted' attribute to true
+        await quiz.save();
+        } else {
+        console.warn('Quiz not found, skipping attribute update');
+        }
         res.status(200).json({ message: 'Non Verbal Quiz result created successfully', NonVerbalQuizResult: newResult});
     } catch (error) {
         console.error(error);
