@@ -19,8 +19,6 @@ exports.viewResultById = async (req, res, next) => {
     try {
         const quizId = req.params.quizId; 
         const userId = req.user.userId; 
-        console.log('Quiz Id',quizId);
-        console.log('User Id', userId);
 
         const results = await VerbalQuizResult
             .find({ quizId,userId })

@@ -5,7 +5,7 @@ const verifyJWT = require('../auth.middleware');
 
 router.post('/createVerbalQuizResult',verifyJWT ,verbalQuizResult.createVerbalQuizResult);
 router.get('/viewVerbalQuizResults', verbalQuizResult.viewVerbalQuizResults);
-router.get('/viewVerbalQuizResult/:quizId', verbalQuizResult.viewResultById);
+router.get('/viewVerbalQuizResult/:quizId',verifyJWT, verbalQuizResult.viewResultById);
 // router.get('/countverbalQuizResult', verbalQuizResult.countverbalQuizResult);
 router.delete('/deleteVerbalQuizResult/:id', verbalQuizResult.deleteVerbalQuizResult);
 router.patch('/updateVerbalQuizResult/:id', verbalQuizResult.updateVerbalQuizResult);
