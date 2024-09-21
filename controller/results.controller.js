@@ -1,98 +1,124 @@
-const result = require('../models/result.model');
+const Result = require('../models/result.model'); 
+const Quiz = require('../models/Quiz.model'); 
 
-exports.viewResults = async (req, res, next) => {
+exports.viewQuizResults = async (req, res, next) => {
     try {
-      const results = await result.find({});
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', 0);
-      return res.json(results);
+        const results = await Result.find({}).populate('userId').populate('quizId');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', 0);
+        return res.json(results);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
-  };
-
-exports.viewById= async function(req,res,next){
-    result.find({_id:req.params.id}).then((results)=>{
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', 0);
-      res.json(results);   
-      }).catch((error)=>{
-      return error;
-      })   
 };
 
-
-exports.createResult = async (req, res, next) => {
+// View verbal quiz result by ID
+exports.viewResultById = async (req, res, next) => {
     try {
-      const {type,description,marks} = req.body;
+        const quizId = req.params.quizId; 
+        const userId = req.user.userId; 
 
-        const newResult = new result({
-        type,
-        description,
-        marks,
-      });
-  
-      await newResult.save();
-  
-      res.status(200).json({ message: 'result created successfully' });
+        const results = await Result
+            .find({ quizId,userId })
+            .populate('userId')
+            .populate({ 
+                path: 'quizId', 
+                populate: { 
+                    path: 'questions' 
+                } 
+            });
+
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', 0);
+        
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No quiz results found for this quiz" });
+        }
+        return res.status(200).json({ results });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+        console.error("Error fetching quiz results:", error);
+        return res.status(500).json({ message: "An error occurred while fetching results." });
     }
-  };
+};
 
-
-  // exports.countResults = async (req, res, next) => {
-  //   try {
-  //     const resultCount = await result.countDocuments({});
-  //     const message = "Success";
-  //     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  //     res.setHeader('Pragma', 'no-cache');
-  //     res.setHeader('Expires', 0);
-  
-  //     return res.json({"resultCount": resultCount, message});
-
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ message: 'Server error' });
-  //   }
-  // };
-  
-
-  exports.deleteResult = async (req, res, next) => {
+exports.createQuizResult = async (req, res, next) => {
     try {
-      const resultId = req.params.id;
+        const { userId, quizId, answers,marks } = req.body;
+        const userIDD = req.user.userId;
 
-      const deletedResult = await result.deleteOne({ _id: resultId });
+        const newResult = new Result({
+            userId:userIDD,
+            quizId,
+            answers,
+            marks
 
-      if (deletedResult.deletedCount === 0) {
-        return res.status(404).json({ message: 'result not found' });
-      }
-  
-      res.json({ message: 'result deleted successfully' });
+        });
+        await newResult.save();
+        const quiz = await Quiz.findById(quizId);
+        if (quiz) {
+            quiz.attempted = true; 
+        await quiz.save();
+        } else {
+        console.warn('Quiz not found, skipping attribute update');
+        }
+        res.status(200).json({ message: 'Verbal Quiz result created successfully' });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
-  };
+};
 
-exports.updateResult= async(req, res) => {
-    const _Id = req.params.id;
-    const updated = req.body;
+// Count all verbal quiz results
+// exports.countQuizResults = async (req, res, next) => {
+//     try {
+//         const resultCount = await Result.countDocuments({});
+//         const message = "Success";
+//         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+//         res.setHeader('Pragma', 'no-cache');
+//         res.setHeader('Expires', 0);
+
+//         return res.json({ "Result Count": resultCount, message });
+
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Server error' });
+//     }
+// };
+
+// Delete a verbal quiz result
+exports.deleteQuizResult = async (req, res, next) => {
     try {
-      const results = await result.findByIdAndUpdate(_Id, {$set:updated},{new:true});
+        const resultId = req.params.id;
 
-      if (!results) {
-        return res.status(404).send('result not found');
-      }
-  
-      res.json(results);
+        const deletedResult = await Result.deleteOne({ _id: resultId });
+
+        if (deletedResult.deletedCount === 0) {
+            return res.status(404).json({ message: 'Result not found' });
+        }
+
+        res.json({ message: 'Verbal Quiz result deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+exports.updateQuizResult = async (req, res) => {
+    try {
+        const resultId = req.params.id;
+        const updatedData = req.body;
+
+        const updatedResult = await Result.findByIdAndUpdate(resultId, updatedData, { new: true });
+
+        if (!updatedResult) {
+            return res.status(404).send('Verbal Quiz result not found');
+        }
+        res.json(updatedResult);
     } catch (err) {
-      console.error('Error patching result:', err);
-      res.status(500).send('Internal server error');
+        console.error('Error updating verbal quiz result:', err);
+        res.status(500).send('Internal server error');
     }
-  };
-
+};

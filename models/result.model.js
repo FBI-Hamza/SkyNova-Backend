@@ -1,19 +1,28 @@
 var mongoose = require("mongoose");
 
 var resultSchema = mongoose.Schema({
-    type:{
-        type: String,
-        required: true
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', 
+        required: false
     },
-    description: {
-        type: String,
+    quizId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Quiz', 
         required: true
     },
     marks: {
         type: Number,
         required: true
+    },
+    answers: {
+        type: [String],
+        required: false
+    },
+    dateAttempted: {
+        type: Date,
+        default: Date.now 
     }
-    
 });
 
-module.exports = mongoose.model('result', resultSchema);
+module.exports = mongoose.model('Result', resultSchema);
