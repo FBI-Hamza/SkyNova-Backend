@@ -169,9 +169,8 @@ exports.createNonVerbalQuestion = async (req, res) => {
           const blob = base64ToBlob(option.image, 'image/png');
           const optionImageRef = ref(storage, `nonVerbalQuestions/${blob}`);
           await uploadBytesResumable(optionImageRef, blob);
-          console.log('blob',blob);
           const optionImageURL = await getDownloadURL(optionImageRef);
-          console.log('image URL',optionImageRef)
+          console.log('URL :',optionImageURL);
           optionsWithImages.push({
             label: option.label,
             image: optionImageURL,
