@@ -18,7 +18,16 @@ exports.viewResultById = async (req, res, next) => {
     try {
         const quizId = req.params.quizId; 
         const userId = req.user.userId; 
-        const results = await nonVerbalQuizResult.find({ quizId,userId }).populate('userId quizId');
+
+        const results = await nonVerbalQuizResult
+            .find({ quizId, userId })
+            .populate('userId')
+            .populate({ 
+                path: 'quizId', 
+                populate: { 
+                    path: 'questions' 
+                } 
+            });
 
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
@@ -27,11 +36,13 @@ exports.viewResultById = async (req, res, next) => {
         if (results.length === 0) {
             return res.status(404).json({ message: "No non-verbal quiz results found for this quiz" });
         }
-        res.json(results);
+        return res.status(200).json({ results });
     } catch (error) {
-        next(error);
+        console.error("Error fetching quiz results:", error);
+        return res.status(500).json({ message: "An error occurred while fetching results." });
     }
 };
+
 
 // exports.viewResultById = async (req, res, next) => {
 //     try {
