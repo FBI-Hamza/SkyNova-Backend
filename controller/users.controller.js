@@ -196,7 +196,8 @@ exports.verifyPassword = async (req, res) => {
       }
   
       const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-      
+
+  
       if (!SENDGRID_API_KEY) {
         console.error('Missing environment variable SENDGRID_API_KEY');
         return res.status(500).json({ message: 'Internal server error' });
