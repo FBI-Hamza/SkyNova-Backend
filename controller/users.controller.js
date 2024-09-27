@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const secret = "Hamza";
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const sgMail = require('@sendgrid/mail');
+
 require('dotenv').config();
 
 exports.signup = async (req, res) => {
@@ -90,7 +92,7 @@ exports.forgetPassword = async (req, res) => {
     }
 
     async function sendPasswordResetEmail(userEmail, resetCode) {
-      const sgMail = require('@sendgrid/mail');
+      // const sgMail = require('@sendgrid/mail');
       sgMail.setApiKey(SENDGRID_API_KEY);
       const msg = {
         to: userEmail,

@@ -71,22 +71,21 @@ exports.createQuizResult = async (req, res, next) => {
     }
 };
 
-// Count all verbal quiz results
-// exports.countQuizResults = async (req, res, next) => {
-//     try {
-//         const resultCount = await Result.countDocuments({});
-//         const message = "Success";
-//         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-//         res.setHeader('Pragma', 'no-cache');
-//         res.setHeader('Expires', 0);
+exports.countQuizResults = async (req, res, next) => {
+    try {
+        const resultCount = await Result.countDocuments({});
+        const message = "Success";
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', 0);
 
-//         return res.json({ "Result Count": resultCount, message });
+        return res.json({ "Result Count": resultCount, message });
 
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Server error' });
-//     }
-// };
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
 // Delete a verbal quiz result
 exports.deleteQuizResult = async (req, res, next) => {
