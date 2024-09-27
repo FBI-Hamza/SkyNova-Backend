@@ -83,7 +83,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
   origin: true,
-  credentials: true, 
+  // credentials: true, 
 }));
 app.use(helmet({
   contentSecurityPolicy: false, 
