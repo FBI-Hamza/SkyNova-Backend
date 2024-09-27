@@ -9,4 +9,6 @@ router.post('/forgetPassword', users.forgetPassword);
 router.post('/verifyCode', users.verifyPassword);
 router.post('/resetPassword', users.resetPassword);
 router.get('/viewAdmins',users.viewAdmins);
+router.get('/contactUs',users.contactUs);
+
 module.exports = router;

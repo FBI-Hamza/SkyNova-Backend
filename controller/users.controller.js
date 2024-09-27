@@ -182,3 +182,46 @@ exports.verifyPassword = async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+  exports.contactUs = async (req, res) => {
+    try {
+      const { name, email, message } = req.body;
+  
+      console.log('Contact Us Form Data:', { name, email, message });
+  
+      if (!name || !email || !message) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+  
+      const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+      
+      if (!SENDGRID_API_KEY) {
+        console.error('Missing environment variable SENDGRID_API_KEY');
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+  
+      async function sendContactEmail(userName, userEmail, userMessage) {
+        sgMail.setApiKey(SENDGRID_API_KEY);
+        const msg = {
+          to: 'skynova804@gmail.com',
+          from: userEmail, 
+          subject: `Contact Us Form Submission from ${userName}`,
+          text: `You have received a new message from ${userName} (${userEmail}):\n\n${userMessage}`,
+        };
+  
+        try {
+          await sgMail.send(msg);
+          console.log(`Contact email sent from ${userEmail}`);
+          res.status(200).json({ message: 'Your message has been sent successfully' });
+        } catch (error) {
+          console.error('Error sending email:', error);
+          res.status(500).json({ message: 'Internal server error' });
+        }
+      }
+  
+      await sendContactEmail(name, email, message);
+    } catch (error) {
+      console.error('Server error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
