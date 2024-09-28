@@ -1,9 +1,11 @@
-
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.render('error', { 
-    message: err.message, 
-    error: err, 
-    title: 'Error' 
-  });
-});
+doctype html
+html
+  head
+    title= title
+  body
+    h1= title
+    h2= message
+    if error.status
+      h3 Status: #{error.status}
+    if error.stack
+      pre #{error.stack}

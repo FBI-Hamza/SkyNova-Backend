@@ -146,10 +146,9 @@ exports.createAviator = async (req, res, next) => {
         if (existingUser) {
             return res.status(400).json({ message: 'Email already exists' });
         }
-        console.log(req.file.originalname);
         let profilePictureUrl = '';
         if (req.file) {
-            const dateTime = giveCurrentDateTime();
+          const dateTime = giveCurrentDateTime();
             const storageRef = ref(storage, `ProfilePictures/${req.file.originalname}-${dateTime}`);
             const metadata = { contentType: req.file.mimetype };
 

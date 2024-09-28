@@ -86,11 +86,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   // credentials: true, 
 // }));
 
+// const corsOptions = {
+//   origin: function(origin, callback){
+//     return callback(null, true);
+//   },
+//   credentials: true
+// };
+
 const corsOptions = {
-  origin: function(origin, callback){
-    return callback(null, true);
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    callback(null, true); 
   },
-  credentials: true
+  credentials: true 
 };
 
 app.use(cors(corsOptions));
@@ -136,12 +144,21 @@ app.all('*',function(req, res, next) {
   next(createError(404));
 });
 
-app.use(function(err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', { 
+    message: err.message, 
+    error: req.app.get('env') === 'development' ? err : {}, 
+    title: 'Error' 
+  });
 });
+
+// app.use(function(err, req, res, next) {
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 module.exports = app;
 
