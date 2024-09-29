@@ -229,7 +229,7 @@ exports.countAviators = async (req, res, next) => {
     try {
       const aviatorId = req.params.id;
 
-      const deletedAviator = await user.deleteOne({ _id: aviatorId, role: 'Aviator' });
+      const deletedAviator = await user.deleteOne({ _id: aviatorId });
 
       if (deletedAviator.deletedCount === 0) {
         return res.status(404).json({ message: 'Aviator not found' });
