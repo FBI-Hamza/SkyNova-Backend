@@ -17,12 +17,11 @@ const verifyJWT = require('../auth.middleware');
 exports.viewCommunityQuestions = async (req, res, next) => {
   try {
       const question = await questions.find({})
-      .populate('author') // Populate the author field of the question
+      .populate('author') 
       .populate({
-          path: 'answers',  // Populate the answers field
+          path: 'answers',  
           populate: {
-              path: 'author',  // Populate the author field inside each answer
-              // select: 'name email'  // Specify fields to include from the author (adjust as needed)
+              path: 'author', 
           }
       });
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -35,16 +34,32 @@ exports.viewCommunityQuestions = async (req, res, next) => {
   }
 };
 
-exports.viewById= async function(req,res,next){
-      questions.find({_id:req.params.id}).populate('answer').populate('author').then((Questions)=>{
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', 0);
-      res.json(Questions);   
-      }).catch((error)=>{
-      return error;
-      })   
+exports.viewById = async function(req, res, next) {
+  try {
+    const questionss = await questions.findById(req.params.id) 
+      .populate('author')
+      .populate({
+        path: 'answers',
+        populate: {
+          path: 'author',
+        }
+      });
+
+    if (!questionss) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', 0);
+
+    res.json(questionss);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
 };
+
 
 // exports.createCommunityQuestion = async (req, res, next) => {
 //   try {
