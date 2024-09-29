@@ -246,6 +246,7 @@ exports.countAviators = async (req, res, next) => {
     const _Id = req.params.id;
     const updated = req.body;
     const { email } = updated; 
+    console.log(req.body);
 
     try {
         if (email) {
