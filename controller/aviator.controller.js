@@ -76,9 +76,9 @@ exports.viewAviators = async (req, res, next) => {
 
     const skip = (page - 1) * limit;
 
-    const aviators = await user.find({ role: 'Aviator' }).skip(skip).limit(limit);
+    const aviators = await user.find({}).skip(skip).limit(limit);
 
-    const total = await user.countDocuments({ role: 'Aviator' });
+    const total = await user.countDocuments({});
 
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
@@ -148,8 +148,8 @@ exports.createAviator = async (req, res, next) => {
         }
         let profilePictureUrl = '';
         if (req.file) {
-          console.log(req.file);
-          const dateTime = giveCurrentDateTime();
+            console.log(req.file);
+            const dateTime = giveCurrentDateTime();
             const storageRef = ref(storage, `ProfilePictures/${req.file.originalname}-${dateTime}`);
             const metadata = { contentType: req.file.mimetype };
 
