@@ -75,6 +75,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'));
+const corsOptions = {
+  origin: '*',
+  credentials: true 
+};
+
+app.use(cors(corsOptions));
+
 app.use(logger('dev'));
 app.use(express.json({limit:"100mb"}));
 app.use(bodyParser.json({limit:"100mb"}));
@@ -93,12 +100,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   credentials: true
 // };
 
-const corsOptions = {
-  origin: '*',
-  credentials: true 
-};
-
-app.use(cors(corsOptions));
 
 app.use(helmet({
   contentSecurityPolicy: false, 
