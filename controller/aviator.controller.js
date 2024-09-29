@@ -254,7 +254,7 @@ exports.countAviators = async (req, res, next) => {
                 return res.status(400).json({ message: 'Email already exists' });
             }
         }
-
+        console.log(updated);
         const aviator = await user.findByIdAndUpdate(_Id, updated, { new: true });
 
         if (!aviator) {
