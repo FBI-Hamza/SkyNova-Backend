@@ -19,7 +19,7 @@ const io = socketio(server, {
   cors: {
     origin: true,
     methods: ['GET', 'POST'],
-    // credentials: true,
+    credentials: true,
   }
 });
 
@@ -94,10 +94,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // };
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    callback(null, true); 
-  },
+  origin: '*',
   credentials: true 
 };
 
