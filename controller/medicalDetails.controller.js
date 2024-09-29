@@ -50,6 +50,7 @@ exports.viewById= async function(req,res,next){
 //   };
 exports.createMedicalDetails = async (req, res, next) => {
     try {
+        console.log(req.body);
         const { eyesight, height, weight,weightUnit,heightUnit } = req.body;
         const userIDD = req.user.userId
         let fileUrl = '';
