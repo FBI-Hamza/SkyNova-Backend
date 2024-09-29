@@ -15,6 +15,7 @@ const http = require('http');
 const socketio = require('socket.io');
 const app = express();
 const server = http.createServer(app);
+
 const io = socketio(server, {
   cors: {
     origin: true,
@@ -76,7 +77,7 @@ app.set('view engine', 'jade');
 app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'));
 const corsOptions = {
-  origin: '*',
+  origin: 'http://localhost:3000',
   credentials: true 
 };
 
