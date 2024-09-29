@@ -5,6 +5,7 @@ const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('fireb
 const config = require('../firebase.config');
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
+const base64ToBlob = require('../base64toblob');
 
 // exports.viewAviators = async (req, res, next) => {
 //   try {
@@ -242,32 +243,133 @@ exports.countAviators = async (req, res, next) => {
     }
   };
 
-  exports.updateAviator = async (req, res) => {
-    const _Id = req.params.id;
-    const updated = req.body;
-    const { email } = updated; 
-    console.log(req.body);
+//   exports.updateAviator = async (req, res) => {
+//     const _Id = req.params.id;
+//     const updated = req.body;
+//     const { email,profileImage } = updated; 
+//     try {
+//         if (email) {
+//             const existingUser = await user.findOne({ email });
+//             if (existingUser) {
+//                 return res.status(400).json({ message: 'Email already exists' });
+//             }
+//         }
+//         if (profileImage) {
+//           let profilePictureUrl = '';
+//           if (profileImage) {
+//               const blob = base64ToBlob(profileImage);
+  
+//               const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`);
+//               const metadata = {
+//                   contentType: 'image/jpeg'
+//               };
+  
+//               const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
+//               profilePictureUrl = await getDownloadURL(snapshot.ref);
+//           }
+  
+//           const aviator = await user.findByIdAndUpdate(_Id, { ...updated, profileImage: profilePictureUrl }, { new: true });
+//       }
 
-    try {
-        if (email) {
-            const existingUser = await user.findOne({ email });
-            if (existingUser) {
-                return res.status(400).json({ message: 'Email already exists' });
-            }
-        }
-        console.log(updated);
-        const aviator = await user.findByIdAndUpdate(_Id, updated, { new: true });
+//         if (!aviator) {
+//             return res.status(404).send('Aviator not found');
+//         }
 
-        if (!aviator) {
-            return res.status(404).send('Aviator not found');
-        }
+//         res.json(aviator);
+//     } catch (err) {
+//         console.error('Error patching aviator:', err);
+//         res.status(500).send('Internal server error');
+//     }
+// };
 
-        res.json(aviator);
-    } catch (err) {
-        console.error('Error patching aviator:', err);
-        res.status(500).send('Internal server error');
-    }
+// exports.updateAviator = async (req, res) => {
+//   const _Id = req.params.id;
+//   const updated = req.body;
+//   const { email, profileImage } = updated; 
+
+//   try {
+//       if (email) {
+//           const existingUser = await user.findOne({ email });
+//           if (existingUser) {
+//               return res.status(400).json({ message: 'Email already exists' });
+//           }
+//       }
+
+      
+//       let profilePictureUrl = '';
+//       if (profileImage) {
+          
+//           const blob = base64ToBlob(profileImage);
+
+//           const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`); 
+//           const metadata = {
+//               contentType: 'image/jpeg' 
+//           };
+
+//           const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
+//           profilePictureUrl = await getDownloadURL(snapshot.ref);
+//       }
+
+//       const aviator = await user.findByIdAndUpdate(_Id, { ...updated, profileImage: profilePictureUrl }, { new: true });
+
+//       if (!aviator) {
+//           return res.status(404).send('Aviator not found');
+//       }
+
+//       res.json(aviator);
+//   } catch (err) {
+//       console.error('Error updating aviator:', err);
+//       res.status(500).send('Internal server error');
+//   }
+// };
+
+exports.updateAviator = async (req, res) => {
+  const _Id = req.params.id;
+  const updated = req.body;
+  const { email, profileImage } = updated; 
+
+  try {
+      // Check for email existence
+      if (email) {
+          const existingUser = await user.findOne({ email });
+          if (existingUser) {
+              return res.status(400).json({ message: 'Email already exists' });
+          }
+      }
+
+      // Prepare the update object
+      const updateFields = { ...updated };
+
+      // Handle profile image if provided
+      if (profileImage) {
+          // Convert base64 to Blob
+          const blob = base64ToBlob(profileImage); // Adjust this function as needed
+
+          // Prepare for Firebase upload
+          const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`);
+          const metadata = {
+              contentType: 'image/jpeg' // Change according to the actual image type
+          };
+
+          const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
+          const profilePictureUrl = await getDownloadURL(snapshot.ref);
+
+          // Set the profileImage field in the update object
+          updateFields.profileImage = profilePictureUrl;
+      }
+
+      // Update user with new data, without overwriting profileImage if not provided
+      const aviator = await user.findByIdAndUpdate(_Id, updateFields, { new: true });
+
+      if (!aviator) {
+          return res.status(404).send('Aviator not found');
+      }
+
+      res.json(aviator);
+  } catch (err) {
+      console.error('Error updating aviator:', err);
+      res.status(500).send('Internal server error');
+  }
 };
-
 
 
