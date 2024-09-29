@@ -139,15 +139,16 @@ exports.viewById= async function(req,res,next){
 
 exports.createAviator = async (req, res, next) => {
     try {
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, email, password, role } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-
+        console.log(req.body);
         const existingUser = await user.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Email already exists' });
         }
         let profilePictureUrl = '';
         if (req.file) {
+          console.log(req.file);
           const dateTime = giveCurrentDateTime();
             const storageRef = ref(storage, `ProfilePictures/${req.file.originalname}-${dateTime}`);
             const metadata = { contentType: req.file.mimetype };
@@ -161,7 +162,7 @@ exports.createAviator = async (req, res, next) => {
             lastName,
             email,
             password: hashedPassword,
-            role: 'Aviator',
+            role: role,
             profileImage: profilePictureUrl,
         });
 
