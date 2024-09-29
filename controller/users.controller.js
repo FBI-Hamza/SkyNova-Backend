@@ -187,7 +187,7 @@ exports.verifyPassword = async (req, res) => {
 
   exports.contactUs = async (req, res) => {
     try {
-      const { name, email, message } = req.body;
+      const { name, email, message, subject} = req.body;
   
       console.log('Contact Us Form Data:', { name, email, message });
   
@@ -207,8 +207,8 @@ exports.verifyPassword = async (req, res) => {
         sgMail.setApiKey(SENDGRID_API_KEY);
         const msg = {
           to: 'skynova804@gmail.com',
-          from: userEmail, 
-          subject: `Contact Us Form Submission from ${userName}`,
+          from: 'skynova804@gmail.com', 
+          subject: subject,
           text: `You have received a new message from ${userName} (${userEmail}):\n\n${userMessage}`,
         };
   
