@@ -7,15 +7,27 @@ const createReport = async (req, res) => {
   try {
       const userIDD = req.user.userId; 
 
+      console.log('user ID', userIDD);
       const medicalDetails = await medicalDetailss.findById(userIDD);
+      console.log('medical details', medicalDetails);
       const nonVerbalQuizResult = await nonVerbalQuizResultss.findById(userIDD);
+      console.log('non verbal quiz result', nonVerbalQuizResult);
       const verbalQuizResult = await VerbalQuizResultss.findById(userIDD);
+      console.log('verbal quiz result', verbalQuizResult);
 
+      if (!medicalDetails || !nonVerbalQuizResult || !verbalQuizResult) {
+        return res.status(404).json({ error: 'Not Found' });
+      }
+      
     const newReport = new Report({
       nonVerbalQuizResult,
       verbalQuizResult,
       medicalDetails,
     });
+
+    if (!medicalDetails || !nonVerbalQuizResult || !verbalQuizResult) {
+      return res.status(404).json({ error: 'Not Found' });
+    }
 
     await newReport.save();
     return res.status(201).json({ message: 'Report created successfully', report: newReport });
