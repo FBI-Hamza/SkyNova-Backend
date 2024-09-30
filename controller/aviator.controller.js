@@ -149,12 +149,12 @@ exports.createAviator = async (req, res, next) => {
         }
         let profilePictureUrl = '';
         if (req.file) {
-            console.log(req.file);
+            const blob = base64ToBlob(profileImage); 
             const dateTime = giveCurrentDateTime();
-            const storageRef = ref(storage, `ProfilePictures/${req.file.originalname}-${dateTime}`);
-            const metadata = { contentType: req.file.mimetype };
+            const storageRef = ref(storage, `ProfilePictures/${blob.originalname}-${dateTime}`);
+            const metadata = { contentType: blob.mimetype };
 
-            const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+            const snapshot = await uploadBytesResumable(storageRef, blob.buffer, metadata);
             profilePictureUrl = await getDownloadURL(snapshot.ref);
         }
 
@@ -329,7 +329,6 @@ exports.updateAviator = async (req, res) => {
   const { email, profileImage } = updated; 
 
   try {
-      // Check for email existence
       if (email) {
           const existingUser = await user.findOne({ email });
           if (existingUser) {
@@ -337,28 +336,22 @@ exports.updateAviator = async (req, res) => {
           }
       }
 
-      // Prepare the update object
       const updateFields = { ...updated };
 
-      // Handle profile image if provided
       if (profileImage) {
-          // Convert base64 to Blob
-          const blob = base64ToBlob(profileImage); // Adjust this function as needed
+          const blob = base64ToBlob(profileImage); 
 
-          // Prepare for Firebase upload
           const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`);
           const metadata = {
-              contentType: 'image/jpeg' // Change according to the actual image type
+              contentType: 'image/jpeg' 
           };
 
           const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
           const profilePictureUrl = await getDownloadURL(snapshot.ref);
 
-          // Set the profileImage field in the update object
           updateFields.profileImage = profilePictureUrl;
       }
 
-      // Update user with new data, without overwriting profileImage if not provided
       const aviator = await user.findByIdAndUpdate(_Id, updateFields, { new: true });
 
       if (!aviator) {

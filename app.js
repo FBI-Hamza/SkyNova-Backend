@@ -77,7 +77,7 @@ app.set('view engine', 'jade');
 app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'));
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin:true,
   credentials: true 
 };
 
