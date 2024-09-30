@@ -140,15 +140,14 @@ exports.viewById= async function(req,res,next){
 
 exports.createAviator = async (req, res, next) => {
     try {
-        const { firstName, lastName, email, password, role } = req.body;
+        const { firstName, lastName, email, password, role, profileImage } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        console.log(req.body);
         const existingUser = await user.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Email already exists' });
         }
         let profilePictureUrl = '';
-        if (req.file) {
+        if (profileImage) {
             const blob = base64ToBlob(profileImage); 
             const dateTime = giveCurrentDateTime();
             const storageRef = ref(storage, `ProfilePictures/${blob.originalname}-${dateTime}`);
