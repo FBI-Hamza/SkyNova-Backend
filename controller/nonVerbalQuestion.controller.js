@@ -204,8 +204,7 @@ exports.createNonVerbalQuestion = async (req, res) => {
     console.log(req.body);
     console.log(req.files);
 
-    const { quizId, text, answer, options } = req.body; 
-    const { questionImg } = req.files || {};
+    const { quizId, text, answer, options, questionImg } = req.body; 
 
     if (!quizId || !text || !answer || !Array.isArray(options) || options.length === 0) {
       return res.status(400).json({ message: 'Quiz ID, text, answer, and non-empty options are required' });
@@ -219,8 +218,9 @@ exports.createNonVerbalQuestion = async (req, res) => {
 
     let questionImgValue;
     if (questionImg && questionImg.length > 0) {
-      const questionRef = ref(storage, `nonVerbalQuestions/${Date.now()}-${questionImg[0].originalname}`);
-      await uploadBytesResumable(questionRef, questionImg[0]);
+      const blob = base64ToBlob(questionImg, 'image/png');
+      const questionRef = ref(storage, `nonVerbalQuestions/${Date.now()}-${blob.originalname}`);
+      await uploadBytesResumable(questionRef, blob);
       questionImgValue = await getDownloadURL(questionRef);
     }
 
