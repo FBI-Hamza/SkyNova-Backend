@@ -154,7 +154,7 @@ exports.createAviator = async (req, res, next) => {
             const storageRef = ref(storage, `ProfilePictures/${blob.originalname}-${dateTime}`);
             const metadata = { contentType: blob.mimetype };
 
-            const snapshot = await uploadBytesResumable(storageRef, blob.buffer, metadata);
+            const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
             profilePictureUrl = await getDownloadURL(snapshot.ref);
         }
 
