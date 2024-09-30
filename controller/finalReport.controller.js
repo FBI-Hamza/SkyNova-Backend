@@ -8,17 +8,17 @@ const createReport = async (req, res) => {
       const userIDD = req.user.userId; 
 
       console.log('user ID', userIDD);
-      const medicalDetails = await medicalDetailss.findById(userIDD);
+      const medicalDetails = await medicalDetailss.find(userIDD);
       console.log('medical details', medicalDetails);
-      const nonVerbalQuizResult = await nonVerbalQuizResultss.findById(userIDD);
+      const nonVerbalQuizResult = await nonVerbalQuizResultss.find(userIDD);
       console.log('non verbal quiz result', nonVerbalQuizResult);
-      const verbalQuizResult = await VerbalQuizResultss.findById(userIDD);
+      const verbalQuizResult = await VerbalQuizResultss.find(userIDD);
       console.log('verbal quiz result', verbalQuizResult);
 
       if (!medicalDetails || !nonVerbalQuizResult || !verbalQuizResult) {
         return res.status(404).json({ error: 'Not Found' });
       }
-      
+
     const newReport = new Report({
       nonVerbalQuizResult,
       verbalQuizResult,
