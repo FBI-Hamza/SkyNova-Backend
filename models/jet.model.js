@@ -9,10 +9,14 @@ const jetSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  imageURL: {
+  jetImage: {
     type: String,
-    required: true,
+    required: false,
   },
+  jetLink: {
+    type: String,
+    required: false,
+  }
 });
 
 module.exports = mongoose.model('jet', jetSchema);

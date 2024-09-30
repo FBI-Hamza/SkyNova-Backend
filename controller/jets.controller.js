@@ -16,11 +16,12 @@ const createJet = async (req, res) => {
 
     const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
     const imageURL = await getDownloadURL(snapshot.ref);
-    const { name, description} = req.body;
+    const { name, description, jetLink} = req.body;
     const newJet = new jet({
       name,
       description,
-      imageURL,
+      jetImage:imageURL,
+      jetLink,
     });
     await newJet.save();
     res.json({ message: 'Jet added successfully' }); 

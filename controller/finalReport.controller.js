@@ -1,8 +1,15 @@
 const Report = require('../models/finalReport.model'); 
+const medicalDetailss = require('../models/medicalDetails.model');
+const VerbalQuizResultss = require('../models/verbalQuizResult.model'); 
+const nonVerbalQuizResultss = require('../models/nonVerbalQuizResult.model'); // Adjust the path as necessary
 
 const createReport = async (req, res) => {
   try {
-    const { nonVerbalQuizResult, verbalQuizResult, medicalDetails } = req.body;
+      const userIDD = req.user.userId; 
+
+      const medicalDetails = await medicalDetailss.findById(userIDD);
+      const nonVerbalQuizResult = await nonVerbalQuizResultss.findById(userIDD);
+      const verbalQuizResult = await VerbalQuizResultss.findById(userIDD);
 
     const newReport = new Report({
       nonVerbalQuizResult,
@@ -23,7 +30,7 @@ const viewReports = async (req, res) => {
     const reports = await Report.find({})
       .populate('nonVerbalQuizResult')
       .populate('verbalQuizResult')
-      .populate('medicalDetails'); // Populate references for better detail
+      .populate('medicalDetails');
 
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');

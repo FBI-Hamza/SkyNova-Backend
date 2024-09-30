@@ -82,7 +82,7 @@ exports.createNonVerbalQuizResult = async (req, res, next) => {
 
         const quiz = await nonVerbalQuiz.findById(quizId);
         if (quiz) {
-            quiz.attempted = true; // Set the 'attempted' attribute to true
+            quiz.attempted = true; 
         await quiz.save();
         } else {
         console.warn('Quiz not found, skipping attribute update');
