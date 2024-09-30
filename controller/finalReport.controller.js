@@ -5,14 +5,14 @@ const nonVerbalQuizResultss = require('../models/nonVerbalQuizResult.model'); //
 
 const createReport = async (req, res) => {
   try {
-      const userIDD = req.user.userId; 
+      const userId = req.user.userId; 
 
-      console.log('user ID', userIDD);
-      const medicalDetails = await medicalDetailss.find(userIDD);
+      console.log('user ID', userId);
+      const medicalDetails = await medicalDetailss.findOne({userId});
       console.log('medical details', medicalDetails);
-      const nonVerbalQuizResult = await nonVerbalQuizResultss.find(userIDD);
+      const nonVerbalQuizResult = await nonVerbalQuizResultss.findOne({userId});
       console.log('non verbal quiz result', nonVerbalQuizResult);
-      const verbalQuizResult = await VerbalQuizResultss.find(userIDD);
+      const verbalQuizResult = await VerbalQuizResultss.findOne({userId});
       console.log('verbal quiz result', verbalQuizResult);
 
       if (!medicalDetails || !nonVerbalQuizResult || !verbalQuizResult) {
