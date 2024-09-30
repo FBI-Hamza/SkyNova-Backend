@@ -39,6 +39,7 @@ exports.login = async (req, res,next) => {
         const firstName = user.firstName;
         const lastName = user.lastName;
         const profileImage = user.profileImage;
+        const _id = user._id;
 
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
@@ -49,7 +50,7 @@ exports.login = async (req, res,next) => {
             expiresIn: '30d', 
         });
         res.cookie('token', token, { httpOnly: true });
-        return res.status(200).json({ message: 'Login Successfully', token,role,email,firstName,lastName,profileImage});
+        return res.status(200).json({ message: 'Login Successfully', token,role,email,firstName,lastName,_id,profileImage});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
