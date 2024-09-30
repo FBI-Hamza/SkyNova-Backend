@@ -4,10 +4,12 @@ const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('fireb
 const config = require('../firebase.config');
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
+// var mongoose = require("mongoose");
+
 
 exports.viewMedicalDetails = async (req, res, next) => {
     try {
-      const medicalDetailss = await medicalDetails.find({}).populate(userId);
+      const medicalDetailss = await medicalDetails.find({}).populate('userId');
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -18,17 +20,41 @@ exports.viewMedicalDetails = async (req, res, next) => {
     }
   };
 
-exports.viewById= async function(req,res,next){
-    medicalDetails.find({_id:req.params.id}).populate(userId).then((medicalDetailss)=>{
+// exports.viewById= async function(req,res,next){
+//   const {userId} = req.body;
+//   console.log(userId);
+//   const userIDD = userId;
+//     medicalDetails.findOne({userIDD}).populate('userId').then((medicalDetailss)=>{
+//       console.log(medicalDetailss);
+//       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+//       res.setHeader('Pragma', 'no-cache');
+//       res.setHeader('Expires', 0);
+//       res.json(medicalDetailss);   
+//       }).catch((error)=>{
+//       return error;
+//       })   
+// };
+
+exports.viewById = async function(req, res, next) {
+  try {
+      const { userId } = req.body;
+      console.log(userId);
+
+      const medicalDetailsRecord = await medicalDetails.findOne({ userId }).populate('userId');
+
+      if (!medicalDetailsRecord) {
+          return res.status(404).json({ message: 'Medical details not found' });
+      }
+
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
-      res.json(medicalDetailss);   
-      }).catch((error)=>{
-      return error;
-      })   
+      res.json(medicalDetailsRecord);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error retrieving medical details', error });
+  }
 };
-
 
 // exports.createMedicalDetails = async (req, res, next) => {
 //     try {

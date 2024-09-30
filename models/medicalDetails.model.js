@@ -2,7 +2,8 @@ var mongoose = require("mongoose");
 
 var medicalDetailsSchema = mongoose.Schema({
     userId:{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     eyesight:{

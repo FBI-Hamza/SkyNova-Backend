@@ -7,7 +7,7 @@ const verifyJWT = require('../auth.middleware');
 
 router.post('/createMedicalDetails',upload.single('medicalReport'),verifyJWT, medicalDetails.createMedicalDetails);
 router.get('/viewMedicalDetails', medicalDetails.viewMedicalDetails);
-router.get('/viewMedicalDetails/:id', medicalDetails.viewById);
+router.get('/viewMedicalDetail', medicalDetails.viewById);
 router.delete('/deleteMedicalDetails/:id', medicalDetails.deletemedicalDetails);
 router.patch('/updateMedicalDetails/:id', medicalDetails.updatemedicalDetails);
 module.exports = router;
