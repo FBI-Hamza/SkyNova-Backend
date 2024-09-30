@@ -15,6 +15,10 @@ var nonVerbalQuizResultSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    totalMarks: {
+        type: Number,
+        required: true
+    },
     answers:{
         type: [String],
         required: false
