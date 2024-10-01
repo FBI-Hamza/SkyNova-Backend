@@ -230,3 +230,31 @@ exports.verifyPassword = async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+  exports.forgetPasswordLoggedIn = async (req, res) => {
+    try {
+      const userId = req.user.userId; 
+      console.log(req.user.userId);
+      const { currentPassword, newPassword } = req.body;
+  
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      console.log(user.password);
+      console.log(currentPassword);
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Current password is incorrect' });
+      }
+  
+      user.password = await bcrypt.hash(newPassword, 10); 
+      await user.save();
+  
+      res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
