@@ -35,8 +35,4 @@ var warHeroSchema = mongoose.Schema({
   
 });
 
-<<<<<<< HEAD
 module.exports =  mongoose.model('warHero', warHeroSchema);
-=======
-module.exports = mongoose.model('warhero', warHeroSchema);
->>>>>>> bfb154fcbb6a9647c28b897f71f30868caf64956
