@@ -1,4 +1,4 @@
-const warHero = require('../models/warhero.model'); 
+const warHero = require('../models/warHero.model'); 
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
 const config = require('../firebase.config');
