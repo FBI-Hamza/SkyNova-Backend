@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-var warheroSchema = mongoose.Schema({
+var warHeroSchema = mongoose.Schema({
     name:{
         type: String,
         required: true
@@ -23,4 +23,4 @@ var warheroSchema = mongoose.Schema({
     
 });
 
-module.exports = mongoose.model('warhero', warheroSchema);
+module.exports = mongoose.model('warhero', warHeroSchema);
