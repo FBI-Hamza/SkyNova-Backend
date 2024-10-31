@@ -1,8 +1,8 @@
-const WarHero = require('../models/warHero.model'); 
-const { initializeApp } = require('firebase/app');
-const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
-const config = require('../firebase.config');
-const app = initializeApp(config.firebaseConfig);
+const WarHero = require('C:\\Users\\lenovo\\Documents\\FYP\\ExpressApp\\models\\warHero.model.js');
+import { initializeApp } from 'firebase/app';
+import { getStorage, ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
+import { firebaseConfig } from '../firebase.config';
+const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const createWarHero = async (req, res) => {
@@ -24,7 +24,7 @@ const createWarHero = async (req, res) => {
 
 const viewWarHeroes = async (req, res, next) => {
   try {
-    const warHeroes = await WarHero.find({})
+    const warHeroes = await find({})
     .populate('movies')
     .populate('documentaries')
     .populate('quotes'); 
@@ -41,7 +41,7 @@ const viewWarHeroes = async (req, res, next) => {
 
 const warHeroViewById = async (req, res, next) => {
   try {
-    const warHero = await WarHero.findById(req.params.id)
+    const warHero = await findById(req.params.id)
     .populate('movies')
     .populate('documentaries')
     .populate('quotes'); 
@@ -60,7 +60,7 @@ const deleteWarHero = async (req, res, next) => {
   try {
     const warHeroId = req.params.id;
 
-    const deletedWarHero = await WarHero.deleteOne({ _id: warHeroId });
+    const deletedWarHero = await deleteOne({ _id: warHeroId });
 
     if (deletedWarHero.deletedCount === 0) {
       return res.status(404).json({ message: 'War Hero not found' });
@@ -77,7 +77,7 @@ const updateWarHero = async (req, res) => {
   const _Id = req.params.id;
   const updated = req.body;
   try {
-    const warHero = await WarHero.findByIdAndUpdate(_Id, { $set: updated }, { new: true })
+    const warHero = await findByIdAndUpdate(_Id, { $set: updated }, { new: true })
       .populate('movies documentaries quotes', 'name'); // Adjust as needed for fields to return
 
     if (!warHero) {
@@ -91,7 +91,7 @@ const updateWarHero = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   createWarHero,
   viewWarHeroes,
   deleteWarHero,
