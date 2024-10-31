@@ -1,7 +1,8 @@
 const WarHero = require('C:\\Users\\lenovo\\Documents\\FYP\\ExpressApp\\models\\warHero.model.js');
-import { initializeApp } from 'firebase/app';
-import { getStorage, ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import { firebaseConfig } from '../firebase.config';
+const { initializeApp } = require('firebase/app');
+const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
+const { firebaseConfig } = require('../firebase.config');
+
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
@@ -91,7 +92,7 @@ const updateWarHero = async (req, res) => {
   }
 };
 
-export default {
+module.exports = {
   createWarHero,
   viewWarHeroes,
   deleteWarHero,
