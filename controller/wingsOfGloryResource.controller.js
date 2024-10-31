@@ -1,5 +1,5 @@
 const WingsOfGloryResource = require('../models/wingsOfGloryResource.model');
-const WarHero = require('../models/warHero.model'); 
+const WarHero = require('../models/warHero.model') 
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
 const config = require('../firebase.config');
