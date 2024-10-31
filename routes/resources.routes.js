@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Resources = require('../controller/resource.controller')
-const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage()});
+// const multer = require('multer');
+// const upload = multer({ storage: multer.memoryStorage()});
+const upload = require('../multer.config');
 
 router.post('/createResource',upload.single('resourceFile'), Resources.createResource);
 router.get('/viewResources', Resources.viewResources);

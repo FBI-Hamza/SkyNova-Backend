@@ -4,7 +4,7 @@ const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('fireb
 const config = require('../firebase.config');
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
-const warHero = require('../models/warhero.model'); 
+const warHero = require('../models/warHero.model'); 
 
 
 const createDocumentary = async (req, res) => {

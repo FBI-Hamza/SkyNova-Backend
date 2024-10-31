@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const nonVerbalQuestion = require('../controller/nonVerbalQuestion.controller')
-const multer = require('multer');
-const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: { fileSize: 50 * 1024 * 1024 }
-  });
+// const multer = require('multer');
+// const upload = multer({
+//     storage: multer.memoryStorage(),
+//     limits: { fileSize: 50 * 1024 * 1024 }
+//   });
+const upload = require('../multer.config');
+
 
 router.post('/createNonVerbalQuestion',upload.fields([{ name: 'questionImg', maxCount: 1, },{ name: 'optionsImgs', maxCount: 4 },]), nonVerbalQuestion.createNonVerbalQuestion);
 router.get('/viewNonVerbalQuestion', nonVerbalQuestion.viewNonVerbalQuestion);
