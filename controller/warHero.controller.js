@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const WarHero = require('C:\\Users\\lenovo\\Documents\\FYP\\ExpressApp\\models\\warHero.model.js');
+=======
+const warHero = require('../models/warHero.model'); 
+>>>>>>> bfb154fcbb6a9647c28b897f71f30868caf64956
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
 const { firebaseConfig } = require('../firebase.config');
@@ -97,5 +101,9 @@ module.exports = {
   viewWarHeroes,
   deleteWarHero,
   warHeroViewById,
+<<<<<<< HEAD
   updateWarHero,
+=======
+  updateWarHero
+>>>>>>> bfb154fcbb6a9647c28b897f71f30868caf64956
 };
