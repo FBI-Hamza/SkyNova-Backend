@@ -35,14 +35,14 @@ const createWingsOfGloryResource = async (req, res) => {
 
     await newResource.save();
 
-    if (type === 'movie' || type === 'documentary' || type === 'quote') {
-      const updateField =
-      type === 'movie' ? { movies: newResource._id } :
-      type === 'documentary' ? { documentaries: newResource._id } :
-        { quotes: newResource._id };
+    // if (type === 'movie' || type === 'documentary' || type === 'quote') {
+    //   const updateField =
+    //   type === 'movie' ? { movies: newResource._id } :
+    //   type === 'documentary' ? { documentaries: newResource._id } :
+    //     { quotes: newResource._id };
 
-      await WarHero.findByIdAndUpdate(heroId, { $push: updateField });
-    }
+    //   await WarHero.findByIdAndUpdate(heroId, { $push: updateField });
+    // }
 
     res.status(201).json({ message: 'Resource created successfully', newResource });
   } catch (error) {
@@ -107,10 +107,26 @@ const updateWingsOfGloryResource = async (req, res) => {
   }
 };
 
+const WingsOfGloryResourceViewByTitle = async (req, res) => {
+  try {
+    console.log(req.params);
+    const resources = await WingsOfGloryResource.find({ type: req.params.type });
+    if (resources.length === 0) {
+      return res.status(404).json({ message: 'No resources found with that title' });
+    }
+    res.json(resources);
+  } catch (error) {
+    console.error('Error fetching resources by type:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 module.exports = {
   createWingsOfGloryResource,
   viewWingsOfGloryResource,
   WingsOfGloryResourceViewById,
   deleteWingsOfGloryResource,
   updateWingsOfGloryResource,
+  WingsOfGloryResourceViewByTitle,
 };

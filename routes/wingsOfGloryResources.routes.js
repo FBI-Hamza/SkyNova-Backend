@@ -9,4 +9,5 @@ router.get('/viewWingsOfGloryResources', WingsOfGlory.viewWingsOfGloryResource);
 router.get('/viewWingsOfGloryResource/:id', WingsOfGlory.WingsOfGloryResourceViewById);
 router.delete('/deleteWingsOfGloryResource/:id', WingsOfGlory.deleteWingsOfGloryResource);
 router.patch('/updateWingsOfGloryResource/:id', WingsOfGlory.updateWingsOfGloryResource);
+router.get('/viewWingsOfGloryResources/:type', WingsOfGlory.WingsOfGloryResourceViewByTitle);
 module.exports = router;
