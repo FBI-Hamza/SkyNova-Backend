@@ -2,23 +2,24 @@ const WarHero = require('../models/warHero.model');
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
 const { firebaseConfig } = require('../firebase.config');
+const base64ToBlob = require('../base64toblob');
 
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const createWarHero = async (req, res) => {
   try {
-    console.log(req.body);
     let imageURL = null;
 
     if (req.file) {
       const dateTime = giveCurrentDateTime();
-      const storageRef = ref(storage, `War Heroes/${req.file.originalname} ${dateTime}`);
+      const blob = base64ToBlob(req.file, 'image/png');
+      const storageRef = ref(storage, `War Heroes/${req.file.originalname} ${blob}`);
       const metadata = {
         contentType: req.file.mimetype,
       };
 
-      const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+      const snapshot = await uploadBytesResumable(storageRef,blob);
       imageURL = await getDownloadURL(snapshot.ref);
     }
 

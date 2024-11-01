@@ -109,7 +109,6 @@ const updateWingsOfGloryResource = async (req, res) => {
 
 const WingsOfGloryResourceViewByTitle = async (req, res) => {
   try {
-    console.log(req.params);
     const resources = await WingsOfGloryResource.find({ type: req.params.type });
     if (resources.length === 0) {
       return res.status(404).json({ message: 'No resources found with that title' });
