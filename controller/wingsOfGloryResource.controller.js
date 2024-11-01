@@ -7,43 +7,50 @@ const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
 
 const createWingsOfGloryResource = async (req, res) => {
-    try {
-        const dateTime = giveCurrentDateTime();
-        const storageRef = ref(storage, `Wings Of Glory/${req.file.originalname} ${dateTime}`);
-        const metadata = {
-          contentType: req.file.mimetype,
-        };
-    
-        const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
-        const imageURL = await getDownloadURL(snapshot.ref);
+  try {
+    let imageURL = null;
 
-      const { heroId, name, description, type, content } = req.body;
-  
-      const newResource = new WingsOfGloryResource({
-        name,
-        description,
-        type,
-        content,
-        file:imageURL,
-      });
-  
-      await newResource.save();
-  
-      if (content === 'movie' || content === 'documentary' || content === 'quote') {
-        const updateField = 
-          content === 'movie' ? { movies: newResource._id } :
-          content === 'documentary' ? { documentaries: newResource._id } :
-          { quotes: newResource._id };
-  
-        await WarHero.findByIdAndUpdate(heroId, { $push: updateField });
-      }
-  
-      res.status(201).json({ message: 'Resource created successfully', newResource });
-    } catch (error) {
-      console.error('Error creating resource:', error);
-      res.status(500).json({ message: 'Server error', error: error.message });
+    if (req.file) {
+      const dateTime = giveCurrentDateTime();
+      const storageRef = ref(storage, `Wings Of Glory/${req.file.originalname} ${dateTime}`);
+      const metadata = {
+        contentType: req.file.mimetype,
+      };
+
+      const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+      imageURL = await getDownloadURL(snapshot.ref);
     }
-  };
+
+    const { heroId, name, description, type, content } = req.body;
+
+    const fileField = content === 'quote' ? content : imageURL;
+
+    const newResource = new WingsOfGloryResource({
+      name,
+      description,
+      type,
+      content,
+      file: fileField,
+    });
+
+    await newResource.save();
+
+    if (content === 'movie' || content === 'documentary' || content === 'quote') {
+      const updateField =
+        content === 'movie' ? { movies: newResource._id } :
+        content === 'documentary' ? { documentaries: newResource._id } :
+        { quotes: newResource._id };
+
+      await WarHero.findByIdAndUpdate(heroId, { $push: updateField });
+    }
+
+    res.status(201).json({ message: 'Resource created successfully', newResource });
+  } catch (error) {
+    console.error('Error creating resource:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 
 const viewWingsOfGloryResource = async (req, res) => {
   try {

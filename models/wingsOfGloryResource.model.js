@@ -18,9 +18,8 @@ var wingsOfGloryResourceSchema = mongoose.Schema({
         required: false
     },
     file:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'Quote',
-        required: true
+        type: String,
+        required: false
     },
   
 });

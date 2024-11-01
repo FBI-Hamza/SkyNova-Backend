@@ -121,7 +121,7 @@ app.use('/reports', reportRouter);
 app.use('/certificates', certificateRouter);
 app.use('/resources', resourceRouter);
 app.use('/warHeroes', warHeroRouter);
-app.use('/wingsOfGloryResource', wingsOfGloryResourceRouter);
+app.use('/wingsOfGloryResources', wingsOfGloryResourceRouter);
 // app.use('/results', resultRouter);
 app.use('/complaints',complaintRouter);
 app.use('/suggestions',suggestionRouter);
