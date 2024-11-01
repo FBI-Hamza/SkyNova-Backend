@@ -10,17 +10,10 @@ const storage = getStorage(app);
 const createWarHero = async (req, res) => {
   try {
     let imageURL = null;
-    console.log(req.body);
-
-    if (req.file) {
-      const dateTime = giveCurrentDateTime();
-      const blob = base64ToBlob(req.file, 'image/png');
-      const storageRef = ref(storage, `War Heroes/${req.file.originalname} ${blob}`);
-      const metadata = {
-        contentType: req.file.mimetype,
-      };
-
-      const snapshot = await uploadBytesResumable(storageRef,blob);
+    if (req.body.image) {
+      const blob = base64ToBlob(req.body.image, 'image/png');
+      const storageRef = ref(storage, `War Heroes/$${Date.now()}-${blob.originalname}`);
+      const snapshot = await uploadBytesResumable(storageRef, blob.buffer);
       imageURL = await getDownloadURL(snapshot.ref);
     }
 
