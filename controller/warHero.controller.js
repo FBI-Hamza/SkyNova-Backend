@@ -10,6 +10,7 @@ const storage = getStorage(app);
 const createWarHero = async (req, res) => {
   try {
     let imageURL = null;
+    console.log(req.body);
 
     if (req.file) {
       const dateTime = giveCurrentDateTime();
