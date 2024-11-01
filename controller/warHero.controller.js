@@ -25,7 +25,7 @@ const createWarHero = async (req, res) => {
 
 const viewWarHeroes = async (req, res, next) => {
   try {
-    const warHeroes = await find({})
+    const warHeroes = await WarHero.find({})
     .populate('movies')
     .populate('documentaries')
     .populate('quotes'); 
