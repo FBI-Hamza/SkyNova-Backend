@@ -8,10 +8,25 @@ const storage = getStorage(app);
 
 const createWarHero = async (req, res) => {
   try {
+    console.log(req.body);
+    let imageURL = null;
+
+    if (req.file) {
+      const dateTime = giveCurrentDateTime();
+      const storageRef = ref(storage, `War Heroes/${req.file.originalname} ${dateTime}`);
+      const metadata = {
+        contentType: req.file.mimetype,
+      };
+
+      const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+      imageURL = await getDownloadURL(snapshot.ref);
+    }
+
     const { name, description, accomplishments, medals, movies, documentaries, quotes } = req.body;
     const newWarHero = new WarHero({
       name,
       description,
+      image:imageURL,
       accomplishments,
       medals,
     });
@@ -79,7 +94,7 @@ const updateWarHero = async (req, res) => {
   const updated = req.body;
   try {
     const warHero = await findByIdAndUpdate(_Id, { $set: updated }, { new: true })
-      .populate('movies documentaries quotes', 'name'); // Adjust as needed for fields to return
+      .populate('movies documentaries quotes', 'name'); 
 
     if (!warHero) {
       return res.status(404).send('War Hero not found');

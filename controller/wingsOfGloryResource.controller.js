@@ -23,7 +23,7 @@ const createWingsOfGloryResource = async (req, res) => {
 
     const { heroId, name, description, type, content } = req.body;
 
-    const fileField = content === 'quote' ? content : imageURL;
+    const fileField = type === 'quote' ? type : imageURL;
 
     const newResource = new WingsOfGloryResource({
       name,
@@ -35,10 +35,10 @@ const createWingsOfGloryResource = async (req, res) => {
 
     await newResource.save();
 
-    if (content === 'movie' || content === 'documentary' || content === 'quote') {
+    if (type === 'movie' || type === 'documentary' || type === 'quote') {
       const updateField =
-        content === 'movie' ? { movies: newResource._id } :
-        content === 'documentary' ? { documentaries: newResource._id } :
+      type === 'movie' ? { movies: newResource._id } :
+      type === 'documentary' ? { documentaries: newResource._id } :
         { quotes: newResource._id };
 
       await WarHero.findByIdAndUpdate(heroId, { $push: updateField });
