@@ -52,7 +52,7 @@ const viewWarHeroes = async (req, res, next) => {
 
 const warHeroViewById = async (req, res, next) => {
   try {
-    const warHero = await findById(req.params.id)
+    const warHero = await WarHero.findById(req.params.id)
     .populate('movies')
     .populate('documentaries')
     .populate('quotes'); 
