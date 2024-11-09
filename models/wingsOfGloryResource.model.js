@@ -21,6 +21,11 @@ var wingsOfGloryResourceSchema = mongoose.Schema({
         type: String,
         required: false
     },
+    likeCounts:{
+        type: Number,
+        default: 0,
+        required: false
+    },
   
 });
 

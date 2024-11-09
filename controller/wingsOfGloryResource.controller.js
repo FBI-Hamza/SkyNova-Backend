@@ -120,6 +120,27 @@ const WingsOfGloryResourceViewByTitle = async (req, res) => {
   }
 };
 
+const incrementLikeCount = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const resource = await WingsOfGloryResource.findByIdAndUpdate(
+          id,
+          { $inc: { likeCounts: 1 } }, 
+          { new: true } 
+      );
+
+      if (!resource) {
+          return res.status(404).json({ message: 'Resource not found' });
+      }
+
+      res.status(200).json({ message: 'Like count incremented successfully', resource });
+  } catch (error) {
+      console.error('Error incrementing like count:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 module.exports = {
   createWingsOfGloryResource,
@@ -128,4 +149,5 @@ module.exports = {
   deleteWingsOfGloryResource,
   updateWingsOfGloryResource,
   WingsOfGloryResourceViewByTitle,
+  incrementLikeCount,
 };
