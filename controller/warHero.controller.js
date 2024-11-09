@@ -93,7 +93,7 @@ const updateWarHero = async (req, res) => {
   const _Id = req.params.id;
   const updated = req.body;
   try {
-    const warHero = await findByIdAndUpdate(_Id, { $set: updated }, { new: true })
+    const warHero = await WarHero.findByIdAndUpdate(_Id, { $set: updated }, { new: true })
       .populate('movies documentaries quotes', 'name'); 
 
     if (!warHero) {
