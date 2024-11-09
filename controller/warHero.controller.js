@@ -92,6 +92,17 @@ const deleteWarHero = async (req, res, next) => {
 const updateWarHero = async (req, res) => {
   const _Id = req.params.id;
   const updated = req.body;
+  const contentType = req.headers['content-type'];
+
+  if (!contentType) {
+    return res.status(400).send('Content-Type header is missing');
+  }
+
+  if (!contentType.includes('application/json') && !contentType.includes('multipart/form-data')) {
+    return res.status(400).send('Unsupported Content-Type. Only application/json and multipart/form-data are allowed.');
+  }
+
+  console.log(req.body);
   try {
     const warHero = await WarHero.findByIdAndUpdate(_Id, { $set: updated }, { new: true })
       .populate('movies documentaries quotes', 'name'); 

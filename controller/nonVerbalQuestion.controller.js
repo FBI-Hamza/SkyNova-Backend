@@ -235,7 +235,6 @@ exports.createNonVerbalQuestion = async (req, res) => {
       return { label: option.label };
     });
 
-    // Wait for all option image uploads to complete
     const resolvedOptionsWithImages = await Promise.all(optionsWithImages);
 
     const newQuestion = new nonVerbalQuestion({
