@@ -26,12 +26,12 @@ exports.viewById= async function(req,res,next){
 
 exports.createMessage = async (req, res, next) => {
     try {
-      const {_id,user,content,type,status} = req.body;
+      const {senderID,receiverID,content,type,status} = req.body;
 
       const newMessage = new message({
-        senderID:_id,
-        receiverID:user,
-        text:content,
+        senderID,
+        receiverID,
+        content,
         type,
         status,
       });
