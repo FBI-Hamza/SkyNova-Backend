@@ -95,19 +95,20 @@ const updateWarHero = async (req, res) => {
   console.log(req.body);
   try {
     let imageURL = null;
-    if (req.body.image) {
+    if (req.body.image && req.body.image.startsWith('data:image/png;base64,')) {
       const blob = base64ToBlob(req.body.image, 'image/png');
-      const storageRef = ref(storage, `War Heroes/$${Date.now()}-${blob.originalname}`);
+      const storageRef = ref(storage, `War Heroes/${Date.now()}-${blob.originalname}`);
       const snapshot = await uploadBytesResumable(storageRef, blob);
       imageURL = await getDownloadURL(snapshot.ref);
+    } 
+    else if (req.body.image === null) {
+      imageURL = null;
     }
 
     const updateData = { ...updated };
     if (imageURL !== null) {
       updateData.image = imageURL; 
-    } else {
-      updateData.image = null; 
-    }
+    } 
 
     const warHero = await WarHero.findByIdAndUpdate(_Id, { $set: updateData }, { new: true })
       .populate('movies documentaries quotes', 'name'); 
