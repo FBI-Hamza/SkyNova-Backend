@@ -30,6 +30,7 @@ const createWarHero = async (req, res) => {
     await newWarHero.save();
     res.status(200).json({ message: 'War Hero created successfully' });
   } catch (error) {
+    console.error('Error creating War Hero:', error);
     res.status(400).json({ error: error.message });
   }
 };
@@ -72,7 +73,7 @@ const deleteWarHero = async (req, res, next) => {
   try {
     const warHeroId = req.params.id;
 
-    const deletedWarHero = await deleteOne({ _id: warHeroId });
+    const deletedWarHero = await WarHero.findByIdAndDelete({ _id: warHeroId });
 
     if (deletedWarHero.deletedCount === 0) {
       return res.status(404).json({ message: 'War Hero not found' });

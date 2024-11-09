@@ -145,6 +145,11 @@ app.all('*',function(req, res, next) {
   next(createError(404));
 });
 
+app.use((req, res, next) => {
+  console.log('Request Body:', req.body);
+  next();
+});
+
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error', { 
