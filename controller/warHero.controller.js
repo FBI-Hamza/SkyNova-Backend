@@ -25,6 +25,9 @@ const createWarHero = async (req, res) => {
       image:imageURL,
       accomplishments,
       medals,
+      movies,
+      documentaries,
+      quotes
     });
 
     await newWarHero.save();
