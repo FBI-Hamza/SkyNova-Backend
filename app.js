@@ -30,7 +30,7 @@ const io = socketio(server, {
 let users = {};
 
 io.on('connection', (socket) => {
-  const userID = socket.handshake.query.userID; 
+  const userID = socket.handshake.headers.userID; 
 
   if (userID) {
     users[userID] = socket.id;
