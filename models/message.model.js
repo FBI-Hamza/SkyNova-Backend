@@ -26,7 +26,7 @@ var messageSchema = mongoose.Schema({
     },
     status:{
         type: String,
-        enum:['Sent','Read','Delivered','Unread'],
+        enum:['Sent','Read','Delivered'],
         required: false
     },
 });
