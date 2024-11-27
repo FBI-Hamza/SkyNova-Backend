@@ -69,9 +69,6 @@ exports.createQuiz = async (req, res, next) => {
 
   exports.deleteQuiz = async (req, res, next) => {
     try {
-      console.log(req.params);
-      const quizzes = req.params.id;
-
       const deletedquiz = await quiz.deleteOne({ _id: req.params.id });
 
       if (deletedquiz.deletedCount === 0) {
@@ -86,9 +83,10 @@ exports.createQuiz = async (req, res, next) => {
   };
 
 exports.updateQuiz= async(req, res) => {
+    const _Id = req.params.id;
     const updated = req.body;
     try {
-      const quizzes = await quiz.findByIdAndUpdate(_Id, {$set:updated},{new:true});
+      const quizzes = await quiz.findByIdAndUpdate( _Id, {$set:updated},{new:true});
 
       if (!quizzes) {
         return res.status(404).send('Quiz not found');
