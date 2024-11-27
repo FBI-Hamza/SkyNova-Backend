@@ -10,7 +10,7 @@ var questionSchema = mongoose.Schema({
         required: false
     },
     answer: {
-        type: String,
+        type: [String],
         required: true
     },
     
