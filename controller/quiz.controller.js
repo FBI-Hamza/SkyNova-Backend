@@ -16,8 +16,7 @@ exports.viewQuizzes = async (req, res, next) => {
 
   exports.viewByTitle = async function(req, res, next) {
     try {
-        console.log(req.params);
-        const quizWithQuestions = await quiz.findOne({ title: req.params.title }).populate('questions');
+        const quizWithQuestions = await quiz.find({_id:req.params.id}).populate('questions');
         console.log(quizWithQuestions);
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
@@ -34,7 +33,6 @@ exports.viewQuizzes = async (req, res, next) => {
 
 exports.createQuiz = async (req, res, next) => {
     try {
-      console.log(req.body);
       const {title,description,questions,isAttempted } = req.body;
 
         const newquiz = new quiz({
@@ -88,10 +86,9 @@ exports.createQuiz = async (req, res, next) => {
   };
 
 exports.updateQuiz= async(req, res) => {
-    const title = req.params.title;
     const updated = req.body;
     try {
-      const quizzes = await quiz.findOneAndUpdate({ title: title }, {$set:updated},{new:true});
+      const quizzes = await quiz.findByIdAndUpdate(_Id, {$set:updated},{new:true});
 
       if (!quizzes) {
         return res.status(404).send('Quiz not found');
