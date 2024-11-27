@@ -72,7 +72,7 @@ exports.createQuiz = async (req, res, next) => {
       console.log(req.params);
       const quizzes = req.params.id;
 
-      const deletedquiz = await quiz.deleteOne({ _id: quizzes });
+      const deletedquiz = await quiz.deleteOne({ _id: req.params.id });
 
       if (deletedquiz.deletedCount === 0) {
         return res.status(404).json({ message: 'Quiz not found' });
