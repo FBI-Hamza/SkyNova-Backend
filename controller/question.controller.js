@@ -144,15 +144,15 @@ exports.createQuestion = async (req, res, next) => {
 exports.updateQuestion= async(req, res) => {
     const _Id = req.params.id;
     const updated = req.body;
+    console.log(updated);
     try {
-      const question = await question.findByIdAndUpdate(_Id, {$set:updated},{new:true});
-      console.log(question);
+      const questions = await question.findByIdAndUpdate(_Id, {$set:updated},{new:true});
 
-      if (!question) {
+      if (!questions) {
         return res.status(404).send('Question not found');
       }
   
-      res.json(question);
+      res.json(questions);
     } catch (err) {
       console.error('Error Patching Question:', err);
       res.status(500).send('Internal server error');
