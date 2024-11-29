@@ -3,7 +3,12 @@ const Quiz = require('../models/quiz.model');
 
 exports.viewQuizResults = async (req, res, next) => {
     try {
-        const results = await Result.find({}).populate('userId').populate('quizId');
+        const results = await Result.find({}).populate('userId').populate({ 
+            path: 'quizId', 
+            populate: { 
+                path: 'questions' 
+            } 
+        });;
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
         res.setHeader('Expires', 0);
@@ -45,7 +50,7 @@ exports.viewResultById = async (req, res, next) => {
 
 exports.createQuizResult = async (req, res, next) => {
     try {
-        const { userId, quizId, answers,marks } = req.body;
+        const { quizId, answers,marks } = req.body;
         const userIDD = req.user.userId;
 
         const newResult = new Result({
