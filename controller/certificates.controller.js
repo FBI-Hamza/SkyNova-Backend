@@ -2,11 +2,21 @@ const certificate = require('../models/certificate.model');
 
 exports.viewCertificates = async (req, res, next) => {
     try {
-      const Certificates = await certificate.find({}).populate('userId');
+      const userId = req.user.userId; 
+      const role = req.user.role; 
+  
+      let certificates;  
+      if (role === "Admin") {
+        certificates = await certificate.find({}).populate("userId"); 
+      } else if (role === "Aviator") {
+        certificates = await certificate.find({ userId }).populate("userId");
+      } else {
+        return res.status(403).json({ message: "Access denied" }); 
+      }
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
-      return res.json(Certificates);
+      return res.json(certificates);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
@@ -29,6 +39,7 @@ exports.createCertificate = async (req, res, next) => {
     try {
       const {type,description} = req.body;
       const userId = req.user.userId
+      const role = req.user.role;
 
 
         const newCertificate = new certificate({

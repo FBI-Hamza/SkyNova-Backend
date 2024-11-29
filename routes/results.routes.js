@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Results = require('../controller/results.controller')
+const verifyJWT = require('../auth.middleware.js'); 
 
-router.post('/createResults', Results.createQuizResult);
+router.post('/createResults',verifyJWT, Results.createQuizResult);
 router.get('/viewResults', Results.viewQuizResults);
 router.get('/viewResult/:id', Results.viewResultById);
 router.get('/countResults', Results.countQuizResults);
