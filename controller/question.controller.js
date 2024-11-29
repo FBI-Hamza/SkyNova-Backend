@@ -131,10 +131,10 @@ exports.createQuestion = async (req, res, next) => {
       const deletedQuestion = await question.deleteOne({ _id: questionId });
 
       if (deletedQuestion.deletedCount === 0) {
-        return res.status(404).json({ message: 'Non Verbal Question not found' });
+        return res.status(404).json({ message: 'Question not found' });
       }
   
-      res.json({ message: 'Non Verbal Question deleted successfully' });
+      res.json({ message: 'Question deleted successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server error' });

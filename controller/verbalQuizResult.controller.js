@@ -1,7 +1,6 @@
 const VerbalQuizResult = require('../models/verbalQuizResult.model'); 
 const VerbalQuiz = require('../models/verbalQuiz.model'); 
 
-// View all verbal quiz results
 exports.viewVerbalQuizResults = async (req, res, next) => {
     try {
         const results = await VerbalQuizResult.find({}).populate('userId').populate('quizId');
@@ -15,12 +14,10 @@ exports.viewVerbalQuizResults = async (req, res, next) => {
     }
 };
 
-// View verbal quiz result by ID
 exports.viewResultById = async (req, res, next) => {
     try {
         const quizId = req.params.quizId; 
         const userId = req.user.userId; 
-
         const results = await VerbalQuizResult
             .find({ quizId,userId })
             .populate('userId')

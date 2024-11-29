@@ -2,7 +2,7 @@ const certificate = require('../models/certificate.model');
 
 exports.viewCertificates = async (req, res, next) => {
     try {
-      const Certificates = await certificate.find({});
+      const Certificates = await certificate.find({}).populate('userId');
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -14,7 +14,7 @@ exports.viewCertificates = async (req, res, next) => {
   };
 
 exports.viewById= async function(req,res,next){
-      certificate.findOne({_id:req.params.id}).then((Certificates)=>{
+      certificate.findOne({_id:req.params.id}).populate('userId').then((Certificates)=>{
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', 0);
@@ -28,8 +28,11 @@ exports.viewById= async function(req,res,next){
 exports.createCertificate = async (req, res, next) => {
     try {
       const {type,description} = req.body;
+      const userId = req.user.userId
+
 
         const newCertificate = new certificate({
+        userId,
         type,
         description,
         });

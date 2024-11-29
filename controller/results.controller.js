@@ -14,7 +14,6 @@ exports.viewQuizResults = async (req, res, next) => {
     }
 };
 
-// View verbal quiz result by ID
 exports.viewResultById = async (req, res, next) => {
     try {
         const quizId = req.params.quizId; 
