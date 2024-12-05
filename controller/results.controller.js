@@ -91,7 +91,6 @@ exports.countQuizResults = async (req, res, next) => {
     }
 };
 
-// Delete a verbal quiz result
 exports.deleteQuizResult = async (req, res, next) => {
     try {
         const resultId = req.params.id;
