@@ -21,8 +21,9 @@ exports.viewQuizResults = async (req, res, next) => {
 
 exports.viewResultById = async (req, res, next) => {
     try {
-        console.log("params",req.params);
-        const quizId = req.params.quizId; 
+        const quizId = req.params.id; 
+        console.log("user",req.user);
+
         const userId = req.user.userId; 
 
         console.log("quiz id",quizId);
