@@ -23,11 +23,8 @@ exports.viewResultById = async (req, res, next) => {
     try {
         const quizId = req.params.id; 
         console.log("user",req.user);
-
         const userId = req.user.userId; 
 
-        console.log("quiz id",quizId);
-        console.log("userId",userId);
         const results = await Result
             .find({ quizId,userId })
             .populate('userId')
