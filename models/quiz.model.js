@@ -15,7 +15,7 @@ var quizSchema = mongoose.Schema({
         ref: 'Question',
         required: false
     }],
-    attemptedFirstTime: {
+    attempted: {
         type: Boolean,
         default: false 
     },
