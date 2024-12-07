@@ -102,7 +102,7 @@ exports.deleteQuizResult = async (req, res, next) => {
             return res.status(404).json({ message: 'Result not found' });
         }
 
-        res.json({ message: 'Verbal Quiz result deleted successfully' });
+        res.json({ message: 'Result deleted successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -117,11 +117,11 @@ exports.updateQuizResult = async (req, res) => {
         const updatedResult = await Result.findByIdAndUpdate(resultId, updatedData, { new: true });
 
         if (!updatedResult) {
-            return res.status(404).send('Verbal Quiz result not found');
+            return res.status(404).send('Result not found');
         }
         res.json(updatedResult);
     } catch (err) {
-        console.error('Error updating verbal quiz result:', err);
+        console.error('Error updating result:', err);
         res.status(500).send('Internal server error');
     }
 };

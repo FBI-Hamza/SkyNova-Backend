@@ -32,29 +32,71 @@ exports.signup = async (req, res) => {
     }
 };
 
-exports.login = async (req, res,next) => {
-    try {
-        const { email, role, password } = req.body;
-        const user = await User.findOne({ email });
-        const firstName = user.firstName;
-        const lastName = user.lastName;
-        const profileImage = user.profileImage;
-        const _id = user._id;
+// exports.login = async (req, res,next) => {
+//     try {
+//         const { email, role, password } = req.body;
+//         const user = await User.findOne({ email });
+//         const firstName = user.firstName;
+//         const lastName = user.lastName;
+//         const profileImage = user.profileImage;
+//         const _id = user._id;
 
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
+//         const validPassword = await bcrypt.compare(password, user.password);
+//         if (!validPassword) {
+//             return res.status(401).json({ message: 'Invalid credentials' });
+//         }
 
-        const token = jwt.sign({ email: user.email, userName: user.firstName ,userId: user._id,role: user.role  }, secret, {
-            expiresIn: '30d', 
-        });
-        res.cookie('token', token, { httpOnly: true });
-        return res.status(200).json({ message: 'Login Successfully', token,role,email,firstName,lastName,_id,profileImage});
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
+//         const token = jwt.sign({ email: user.email, userName: user.firstName ,userId: user._id,role: user.role  }, secret, {
+//             expiresIn: '30d', 
+//         });
+//         res.cookie('token', token, { httpOnly: true });
+//         return res.status(200).json({ message: 'Login Successfully', token,role,email,firstName,lastName,_id,profileImage});
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Server error' });
+//     }
+// };
+
+exports.login = async (req, res) => {
+  try {
+      const { email, password } = req.body;
+
+      const user = await User.findOne({ email });
+      if (!user) {
+          return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      if (user.status === 'blocked') {
+          return res.status(403).json({ message: 'Your account has been blocked. Please contact support.' });
+      }
+
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+          return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      const token = jwt.sign(
+          { email: user.email, userName: user.firstName, userId: user._id, role: user.role },
+          secret,
+          { expiresIn: '30d' }
+      );
+
+      res.cookie('token', token, { httpOnly: true });
+
+      return res.status(200).json({
+          message: 'Login Successfully',
+          token,
+          role: user.role,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          _id: user._id,
+          profileImage: user.profileImage,
+      });
+  } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
 };
 
 
@@ -258,3 +300,25 @@ exports.verifyPassword = async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+  exports.blockUser = async (req, res) => {
+    try {
+        const { userId } = req.params; 
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.status === 'blocked') {
+            return res.status(400).json({ message: 'User is already blocked' });
+        }
+
+        user.status = 'blocked';
+        await user.save();
+
+        res.status(200).json({ message: 'User has been successfully blocked' });
+    } catch (error) {
+        console.error('Error blocking user:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

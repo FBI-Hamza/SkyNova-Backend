@@ -36,6 +36,10 @@ var userSchema = mongoose.Schema({
         type: Date,
         required: false
     },
+    status:{
+        type: String,
+        required: false
+    },
 });
 
 module.exports = mongoose.model('User', userSchema);
