@@ -12,7 +12,7 @@ router.post('/verifyCode', users.verifyPassword);
 router.post('/resetPassword', users.resetPassword);
 router.get('/viewAdmins',users.viewAdmins);
 router.post('/contactUs',users.contactUs);
-router.post('/blockUser',users.blockUser);
+router.patch('/blockUser/:id',users.blockUser);
 
 
 module.exports = router;

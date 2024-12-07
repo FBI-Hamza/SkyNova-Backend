@@ -303,7 +303,7 @@ exports.verifyPassword = async (req, res) => {
 
   exports.blockUser = async (req, res) => {
     try {
-        const { userId } = req.params; 
+        const userId  = req.params.id; 
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
