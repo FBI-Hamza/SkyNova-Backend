@@ -103,7 +103,7 @@ exports.deleteQuizResult = async (req, res, next) => {
       return res.status(404).json({ message: "Result not found" });
     }
 
-    res.json({ message: "Verbal Quiz result deleted successfully" });
+    res.json({ message: "Result deleted successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
