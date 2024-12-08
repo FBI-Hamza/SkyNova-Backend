@@ -1,22 +1,22 @@
-const bcrypt = require('bcrypt');
-const user = require('../models/user.model');
-const { initializeApp } = require('firebase/app');
-const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require('firebase/storage');
-const config = require('../firebase.config');
+const bcrypt = require("bcrypt");
+const user = require("../models/user.model");
+const { initializeApp } = require("firebase/app");
+const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
+const config = require("../firebase.config");
 const app = initializeApp(config.firebaseConfig);
 const storage = getStorage(app);
-const base64ToBlob = require('../base64toblob');
+const base64ToBlob = require("../base64toblob");
 
 exports.viewAviators = async (req, res, next) => {
   try {
-    const aviator = await user.find({ role: 'Aviator' });
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', 0);
+    const aviator = await user.find({ role: "Aviator" });
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", 0);
     return res.json(aviator);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -54,19 +54,19 @@ exports.checkEmail = async (req, res, next) => {
   const { email } = req.query;
 
   if (!email) {
-      return res.status(400).json({ message: 'Email is required' });
+    return res.status(400).json({ message: "Email is required" });
   }
 
   try {
-      const users = await user.findOne({ email });
-      if (users) {
-          return res.status(200).json({ exists: true });
-      } else {
-          return res.status(200).json({ exists: false });
-      }
+    const users = await user.findOne({ email });
+    if (users) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -91,7 +91,7 @@ exports.checkEmail = async (req, res, next) => {
 //         total,
 //         page,
 //         limit,
-//         totalPages: Math.ceil(total / limit), 
+//         totalPages: Math.ceil(total / limit),
 //       },
 //     });
 //   } catch (error) {
@@ -100,15 +100,18 @@ exports.checkEmail = async (req, res, next) => {
 //   }
 // };
 
-exports.viewById= async function(req,res,next){
-    user.findOne({_id:req.params.id}).then((aviator)=>{
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', 0);
-      res.json(aviator);   
-      }).catch((error)=>{
+exports.viewById = async function (req, res, next) {
+  user
+    .findOne({ _id: req.params.id })
+    .then((aviator) => {
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", 0);
+      res.json(aviator);
+    })
+    .catch((error) => {
       return error;
-      })   
+    });
 };
 
 // exports.createAviator = async (req, res, next) => {
@@ -128,9 +131,9 @@ exports.viewById= async function(req,res,next){
 //         password: hashedPassword,
 //         role: 'Aviator',
 //       });
-  
+
 //       const savedUser = await newAviator.save();
-  
+
 //       res.status(201).json({ message: 'Aviator created successfully' });
 //     } catch (error) {
 //       console.error(error);
@@ -139,45 +142,45 @@ exports.viewById= async function(req,res,next){
 //   };
 
 exports.createAviator = async (req, res, next) => {
-    try {
-        const { firstName, lastName, email, password, role, profileImage } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const existingUser = await user.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Email already exists' });
-        }
-        let profilePictureUrl = '';
-        if (profileImage) {
-            const blob = base64ToBlob(profileImage); 
-            const dateTime = giveCurrentDateTime();
-            const storageRef = ref(storage, `ProfilePictures/${blob.originalname}-${dateTime}`);
-            const metadata = { contentType: blob.mimetype };
-
-            const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
-            profilePictureUrl = await getDownloadURL(snapshot.ref);
-        }
-
-        const newAviator = new user({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            role: role,
-            profileImage: profilePictureUrl,
-        });
-
-        const savedUser = await newAviator.save();
-
-        res.status(201).json({ message: 'Aviator created successfully', user: savedUser });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+  try {
+    const { firstName, lastName, email, password, role, profileImage } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const existingUser = await user.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
     }
+    let profilePictureUrl = "";
+    if (profileImage) {
+      const blob = base64ToBlob(profileImage);
+      const dateTime = giveCurrentDateTime();
+      const storageRef = ref(storage, `ProfilePictures/${blob.originalname}-${dateTime}`);
+      const metadata = { contentType: blob.mimetype };
+
+      const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
+      profilePictureUrl = await getDownloadURL(snapshot.ref);
+    }
+
+    const newAviator = new user({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      role: role,
+      profileImage: profilePictureUrl,
+    });
+
+    const savedUser = await newAviator.save();
+
+    res.status(201).json({ message: "Aviator created successfully", user: savedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 exports.uploadDP = async (req, res, next) => {
   try {
-    const id  = req.body.id; 
+    const id = req.body.id;
     const dateTime = giveCurrentDateTime();
     const storageRef = ref(storage, `ProfilePictures/${req.file.originalname} ${dateTime}`);
 
@@ -191,61 +194,60 @@ exports.uploadDP = async (req, res, next) => {
     const userOf = await user.findByIdAndUpdate(id, { profileImage: downloadUrl }, { new: true });
 
     if (!userOf) {
-      return res.status(404).send('User not found');
+      return res.status(404).send("User not found");
     }
 
     res.status(200).send({ url: downloadUrl });
   } catch (error) {
-    console.error('Error handling image upload:', error);
-    res.status(500).send('Error handling image upload.');
+    console.error("Error handling image upload:", error);
+    res.status(500).send("Error handling image upload.");
   }
 };
 
 const giveCurrentDateTime = () => {
   const today = new Date();
-  const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-  const dateTime = date + ' ' + time;
+  const date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  const dateTime = date + " " + time;
   return dateTime;
 };
 
 exports.countAviators = async (req, res, next) => {
-    try {
-      const aviatorCount = await user.countDocuments({ role: 'Aviator' });
-      const message = "Success";
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', 0);
-  
-      return res.json({"aviatorCount": aviatorCount, message});
+  try {
+    const aviatorCount = await user.countDocuments({ role: "Aviator" });
+    const message = "Success";
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", 0);
 
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+    return res.json({ aviatorCount: aviatorCount, message });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.deleteAviator = async (req, res, next) => {
+  try {
+    const aviatorId = req.params.id;
+
+    const deletedAviator = await user.deleteOne({ _id: aviatorId });
+
+    if (deletedAviator.deletedCount === 0) {
+      return res.status(404).json({ message: "Aviator not found" });
     }
-  };
-  
-  exports.deleteAviator = async (req, res, next) => {
-    try {
-      const aviatorId = req.params.id;
 
-      const deletedAviator = await user.deleteOne({ _id: aviatorId });
-
-      if (deletedAviator.deletedCount === 0) {
-        return res.status(404).json({ message: 'Aviator not found' });
-      }
-  
-      res.json({ message: 'Aviator deleted successfully' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-    }
-  };
+    res.json({ message: "Aviator deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 //   exports.updateAviator = async (req, res) => {
 //     const _Id = req.params.id;
 //     const updated = req.body;
-//     const { email,profileImage } = updated; 
+//     const { email,profileImage } = updated;
 //     try {
 //         if (email) {
 //             const existingUser = await user.findOne({ email });
@@ -257,16 +259,16 @@ exports.countAviators = async (req, res, next) => {
 //           let profilePictureUrl = '';
 //           if (profileImage) {
 //               const blob = base64ToBlob(profileImage);
-  
+
 //               const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`);
 //               const metadata = {
 //                   contentType: 'image/jpeg'
 //               };
-  
+
 //               const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
 //               profilePictureUrl = await getDownloadURL(snapshot.ref);
 //           }
-  
+
 //           const aviator = await user.findByIdAndUpdate(_Id, { ...updated, profileImage: profilePictureUrl }, { new: true });
 //       }
 
@@ -284,7 +286,7 @@ exports.countAviators = async (req, res, next) => {
 // exports.updateAviator = async (req, res) => {
 //   const _Id = req.params.id;
 //   const updated = req.body;
-//   const { email, profileImage } = updated; 
+//   const { email, profileImage } = updated;
 
 //   try {
 //       if (email) {
@@ -294,15 +296,14 @@ exports.countAviators = async (req, res, next) => {
 //           }
 //       }
 
-      
 //       let profilePictureUrl = '';
 //       if (profileImage) {
-          
+
 //           const blob = base64ToBlob(profileImage);
 
-//           const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`); 
+//           const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`);
 //           const metadata = {
-//               contentType: 'image/jpeg' 
+//               contentType: 'image/jpeg'
 //           };
 
 //           const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
@@ -325,43 +326,42 @@ exports.countAviators = async (req, res, next) => {
 exports.updateAviator = async (req, res) => {
   const _Id = req.params.id;
   const updated = req.body;
-  const { email, profileImage } = updated; 
+  const { email, profileImage } = updated;
 
   try {
-      if (email) {
-          const existingUser = await user.findOne({ email });
-          if (existingUser) {
-              return res.status(400).json({ message: 'Email already exists' });
-          }
+    if (email) {
+      const existingUser = await user.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already exists" });
       }
+    }
 
-      const updateFields = { ...updated };
+    const updateFields = { ...updated };
+    const isProfileImageInProperFormat = profileImage && profileImage.startsWith("data:image/jpeg;base64");
 
-      if (profileImage) {
-          const blob = base64ToBlob(profileImage); 
+    if (profileImage && isProfileImageInProperFormat) {
+      const blob = base64ToBlob(profileImage);
 
-          const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`);
-          const metadata = {
-              contentType: 'image/jpeg' 
-          };
+      const storageRef = ref(storage, `ProfilePictures/${_Id}-${Date.now()}`);
+      const metadata = {
+        contentType: "image/jpeg",
+      };
 
-          const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
-          const profilePictureUrl = await getDownloadURL(snapshot.ref);
+      const snapshot = await uploadBytesResumable(storageRef, blob, metadata);
+      const profilePictureUrl = await getDownloadURL(snapshot.ref);
 
-          updateFields.profileImage = profilePictureUrl;
-      }
+      updateFields.profileImage = profilePictureUrl;
+    }
 
-      const aviator = await user.findByIdAndUpdate(_Id, updateFields, { new: true });
+    const aviator = await user.findByIdAndUpdate(_Id, updateFields, { new: true });
 
-      if (!aviator) {
-          return res.status(404).send('Aviator not found');
-      }
+    if (!aviator) {
+      return res.status(404).send("Aviator not found");
+    }
 
-      res.json(aviator);
+    res.json(aviator);
   } catch (err) {
-      console.error('Error updating aviator:', err);
-      res.status(500).send('Internal server error');
+    console.error("Error updating aviator:", err);
+    res.status(500).send("Internal server error");
   }
 };
-
-
