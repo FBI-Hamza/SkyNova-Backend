@@ -1,14 +1,21 @@
 var mongoose = require("mongoose");
 
 var suggestionSchema = mongoose.Schema({
-  title:{
+  name: {
     type: String,
-    required: true
+    required: true,
   },
-  description: {
+  email: {
     type: String,
-    required: true
+    required: true,
+  },
+  subject: {
+    type: String,
+    required: true,
+  },
+  message: {
+    type: String,
   },
 });
 
-module.exports = mongoose.model('suggestion', suggestionSchema);
+module.exports = mongoose.model("suggestion", suggestionSchema);

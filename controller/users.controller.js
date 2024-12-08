@@ -5,6 +5,7 @@ const secret = "Hamza";
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const sgMail = require("@sendgrid/mail");
+const suggestionModel = require("../models/suggestion.model");
 
 require("dotenv").config();
 
@@ -266,7 +267,12 @@ exports.contactUs = async (req, res) => {
       }
     }
 
-    await sendContactEmail(name, email, message);
+    try {
+      await sendContactEmail(name, email, message);
+    } catch (error) {
+      console.log(error);
+    }
+    await suggestionModel.create({ name, email, subject, message });
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({ message: "Server error" });
