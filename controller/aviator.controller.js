@@ -325,12 +325,15 @@ exports.deleteAviator = async (req, res, next) => {
 
 exports.updateAviator = async (req, res) => {
   const _Id = req.params.id;
+
+  console.log("Id", _Id);
+
   const updated = req.body;
   const { email, profileImage } = updated;
 
   try {
     if (email) {
-      const existingUser = await user.findOne({ email });
+      const existingUser = await user.findOne({ email, _id: { $ne: _Id } });
       if (existingUser) {
         return res.status(400).json({ message: "Email already exists" });
       }
