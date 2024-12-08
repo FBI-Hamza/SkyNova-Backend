@@ -178,7 +178,6 @@ exports.resetPassword = async (req, res) => {
 
 exports.blockUser = async (req, res) => {
   try {
-    console.log(req.body);
     const { id } = req.params;
 
     const user = await User.findById(id);
