@@ -36,7 +36,8 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, role, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, role });
+
     const firstName = user.firstName;
     const lastName = user.lastName;
     const profileImage = user.profileImage;
