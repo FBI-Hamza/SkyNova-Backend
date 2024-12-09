@@ -119,7 +119,17 @@ exports.updateNonVerbalQuiz = async (req, res) => {
   const _Id = req.params.id;
   const updated = req.body;
   try {
-    const nonVerbalQuizzes = await nonVerbalQuiz.findByIdAndUpdate(_Id, { $set: updated }, { new: true });
+    const nonVerbalQuizzes = await nonVerbalQuiz.findByIdAndUpdate(
+      _Id,
+      {
+        $set: {
+          title: updated.title,
+          description: updated.description,
+          // questions: updated.questions,
+        },
+      },
+      { new: true }
+    );
 
     if (!nonVerbalQuizzes) {
       return res.status(404).send("Non Verbal Quiz not found");
@@ -137,7 +147,7 @@ exports.updateNonVerbalQuiz = async (req, res) => {
           questionImgValue = await getDownloadURL(questionRef);
         }
 
-        const optionsWithImages = options.map(async (option) => {
+        const optionsWithImages = question.options.map(async (option) => {
           if (option.image && option.image.length > 0 && option.image.includes("data:image")) {
             const blob = base64ToBlob(option.image, "image/png");
             const optionImageRef = ref(storage, `nonVerbalQuestions/${Date.now()}-${blob.name}`);
@@ -145,7 +155,7 @@ exports.updateNonVerbalQuiz = async (req, res) => {
             const optionImageURL = await getDownloadURL(optionImageRef);
             return { label: option.label, image: optionImageURL };
           }
-          return { label: option.label };
+          return { label: option.label, image: option.image };
         });
 
         const resolvedOptionsWithImages = await Promise.all(optionsWithImages);
