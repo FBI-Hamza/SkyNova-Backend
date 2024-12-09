@@ -1,5 +1,13 @@
 const nonVerbalQuestionModel = require("../models/nonVerbalQuestion.model");
 const nonVerbalQuiz = require("../models/nonVerbalQuiz.model");
+const base64ToBlob = require("../base64toblob");
+const { initializeApp } = require("firebase/app");
+const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
+const multer = require("multer");
+
+const config = require("../firebase.config");
+const app = initializeApp(config.firebaseConfig);
+const storage = getStorage(app);
 
 exports.viewNonVerbalQuizzes = async (req, res, next) => {
   try {
@@ -120,7 +128,31 @@ exports.updateNonVerbalQuiz = async (req, res) => {
     const questions = req.body.questions;
     await Promise.all(
       questions.map(async (question) => {
-        await nonVerbalQuestionModel.findByIdAndUpdate(question._id, { $set: question });
+        let questionImgValue;
+        const image = question.image;
+        if (image && image.length > 0 && image.includes("data:image")) {
+          const blob = base64ToBlob(image, "image/png");
+          const questionRef = ref(storage, `nonVerbalQuestions/${Date.now()}-${blob.originalname}`);
+          await uploadBytesResumable(questionRef, blob);
+          questionImgValue = await getDownloadURL(questionRef);
+        }
+
+        const optionsWithImages = options.map(async (option) => {
+          if (option.image && option.image.length > 0 && option.image.includes("data:image")) {
+            const blob = base64ToBlob(option.image, "image/png");
+            const optionImageRef = ref(storage, `nonVerbalQuestions/${Date.now()}-${blob.name}`);
+            await uploadBytesResumable(optionImageRef, blob);
+            const optionImageURL = await getDownloadURL(optionImageRef);
+            return { label: option.label, image: optionImageURL };
+          }
+          return { label: option.label };
+        });
+
+        const resolvedOptionsWithImages = await Promise.all(optionsWithImages);
+
+        await nonVerbalQuestionModel.findByIdAndUpdate(question._id, {
+          $set: { ...question, image: questionImgValue, options: resolvedOptionsWithImages },
+        });
       })
     );
 
