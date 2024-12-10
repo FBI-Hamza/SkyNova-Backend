@@ -42,7 +42,7 @@ const viewReports = async (req, res) => {
   try {
     const reports = await Report.find({})
       .populate("nonVerbalQuizResult")
-      .populate("verbalQuizResult")
+      .populate("VerbalQuizResult")
       .populate("medicalDetails");
 
     res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
