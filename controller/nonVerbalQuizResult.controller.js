@@ -17,10 +17,19 @@ exports.viewNonVerbalQuizResults = async (req, res, next) => {
 exports.viewResultById = async (req, res, next) => {
   try {
     const quizId = req.params.quizId;
+
     const userId = req.user.userId;
 
+    const searchCriteria = {
+      $or: [{ quizId }, { _id: quizId }],
+      userId,
+    };
+    if (req.user?.role?.toLowerCase() === "admin") {
+      delete searchCriteria.userId;
+    }
+
     const results = await nonVerbalQuizResult
-      .find({ quizId, userId })
+      .find(searchCriteria)
       .populate("userId")
       .populate({
         path: "quizId",
