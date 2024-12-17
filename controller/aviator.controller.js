@@ -51,7 +51,7 @@ exports.viewAviators = async (req, res, next) => {
 // };
 
 exports.checkEmail = async (req, res, next) => {
-  const { email } = req.query;
+  const { email, id } = req.query;
 
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
@@ -59,7 +59,7 @@ exports.checkEmail = async (req, res, next) => {
 
   try {
     const users = await user.findOne({ email });
-    if (users) {
+    if (users && (!id || users._id.toString() !== id)) {
       return res.status(200).json({ exists: true });
     } else {
       return res.status(200).json({ exists: false });
