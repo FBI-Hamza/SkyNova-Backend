@@ -107,6 +107,7 @@ const deleteResource = async (req, res, next) => {
 const updateResource = async (req, res) => {
   const _Id = req.params.id;
   const updated = req.body;
+
   try {
     const resources = await resource.findByIdAndUpdate({ _id: _Id }, updated, { new: true });
 
